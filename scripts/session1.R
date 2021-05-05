@@ -1,4 +1,11 @@
-# PACKAGES and DATA #
+# R BASICS ####
+
+
+
+
+
+
+# PACKAGES and DATA ####
 
 # load the tidyverse (mostly for tidyr, dplyr, and ggplot2)
 library(tidyverse)
