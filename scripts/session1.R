@@ -1,9 +1,7 @@
 # R BASICS ####
 
-# in the console #
-
-3 + 5
-12/7
+# start in the console #
+# follow 'Intro to R' page on Data Carpentry #
 
 # PACKAGES and DATA ####
 
