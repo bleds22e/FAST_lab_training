@@ -1,9 +1,9 @@
 # R BASICS ####
 
+# in the console #
 
-
-
-
+3 + 5
+12/7
 
 # PACKAGES and DATA ####
 
@@ -21,21 +21,29 @@ dugouts <- readr::read_csv("data/dugout2017.csv", skip_empty_rows = TRUE)
 summary(dugouts)
 colnames(dugouts)
 str(dugouts)
-head(dugouts)
-tail(dugouts)
 
-# remove extra two rows
+# remove columns we don't want
+tail(dugouts)
 dugouts <- dugouts[-(103:104),]
 
-# plotting 
-hist(dugouts$Surface_pH)
-hist(dugouts$DOC.mg.L) # why is it getting read in as a character?
+# let's select a few columns we do want
+dugouts_small <- dugouts[c(1,4, 18:23, 38:57)]
 
-dugouts$DOC.mg.L
-unique(dugouts$Date) # replace 24-Jul?
+# fix the date
+head(dugouts_small)
+unique(dugouts_small$Date)
+dugouts[dugouts_small$Date == "24-Jul",]
 
-dugouts[dugouts$Date == '24-Jul',]
+# PLOTTING #
 
-dugouts$DOC.mg.L <- as.numeric(dugouts$DOC.mg.L)
+# histograms
+hist(dugouts_small$Surface_pH)
+hist(dugouts_small$DOC.mg.L) 
 
-plot(dugouts$Surface_pH, dugouts$DOC.mg.L)
+# why is it getting read in as a character?
+dugouts_small$DOC.mg.L
+as.numeric(dugouts_small$DOC.mg.L)
+dugouts_small$DOC.mg.L <- as.numeric(dugouts_small$DOC.mg.L)
+
+# scatter plot
+plot(dugouts_small$Surface_pH, dugouts_small$DOC.mg.L)
