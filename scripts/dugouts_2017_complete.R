@@ -74,6 +74,13 @@ data2019 <- readr::read_csv("https://raw.githubusercontent.com/bleds22e/FAST_lab
 
 # DPLYR: select, filter, mutate ####
 
+# SELECT #
+
+
+# FILTER #
+
+
+# MUTATE # 
 # a lot of things that should be numeric are getting read in as characters
 str(data2017)
 
@@ -100,13 +107,18 @@ library(lubridate)
 data2017 %>% 
   mutate(Date = lubridate::dmy(Date))
 
+# we can do calcuations with mutate and create a new colum
+data2017 %>% 
+  mutate(log_CH4_ebullition = 8.417 - (3.201*log10(Surface_Cond)))
+  
 # if we look at the structure of data2017, we see that nothing has changed. Why?
 str(data2017)
 
 # we can string multiple statements together using pipes
 data2017 <- data2017 %>% 
   mutate(DOC.uM = as.numeric(DOC.uM),
-         Date = dmy(Date)) %>% 
+         Date = dmy(Date),
+         log_CH4_ebullition = 8.417 - (3.201*log10(Surface_Cond))) %>% 
   mutate(across(NH3.mg.N.L:DIC.uM, as.numeric))
 
 
