@@ -61,6 +61,8 @@ hist(dugouts_small$DOC.mg.L) # now it should run!
 # scatter plot
 plot(dugouts_small$Surface_pH, dugouts_small$DOC.mg.L)
 
+#####
+
 # DATA WRANGLING #==============================================================
 # using lubridate, tidyr, dplyr and the pipe
 
@@ -100,7 +102,7 @@ data2017 %>%
 # however, it isn't one of the "core" packages that gets loaded into R when you
 # use the library function to load tidyverse. Therefore, we need to use the 
 # library function to load in lubridate on its own here
-library(lubridate)
+# library(lubridate)
 
 ?dmy
 # we can use lubridate functions with the mutate function
@@ -109,7 +111,7 @@ data2017 %>%
 
 # we can do calcuations with mutate and create a new colum
 data2017 %>% 
-  mutate(log_CH4_ebullition = 8.417 - (3.201*log10(Surface_Cond)))
+  mutate(log_CH4_ebullition = 8.417 + (-3.201*log10(Surface_Cond)))
   
 # if we look at the structure of data2017, we see that nothing has changed. Why?
 str(data2017)
@@ -118,7 +120,13 @@ str(data2017)
 data2017 <- data2017 %>% 
   mutate(DOC.uM = as.numeric(DOC.uM),
          Date = dmy(Date),
-         log_CH4_ebullition = 8.417 - (3.201*log10(Surface_Cond))) %>% 
+         log_CH4_ebullition = 8.417 + (-3.201*log10(Surface_Cond))) %>% 
   mutate(across(NH3.mg.N.L:DIC.uM, as.numeric))
 
+# GROUP BY and SUMMARIZE #
 
+
+# JOINS #
+
+
+# PIVOT_WIDER and PIVOT_LONGER #
