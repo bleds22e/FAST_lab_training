@@ -76,3 +76,5 @@ We also started exploring some of the dugout data from 2017. To do this, we down
 
 ## Session 2 -- May 12, 2021
 We will be learning how to work with dates and how to make and work with tidy data. To do so, we will use a number of packages from the `tidyverse`, including `lubridate`, `tidyr`, and `dplyr`. To learn more about the `tidyverse` and the packages in it, you can visit the [`tidyverse` webpage](https://www.tidyverse.org/). The RStudio website also has links to a number of _very_ helpful [cheatsheets](https://www.rstudio.com/resources/cheatsheets/) for many R topics and specific packages. I particularly recommend downloading cheatsheets for RStudio IDE, `readr`, `tidyr`, `dplyr`, `lubridate`, `stringr`, and `ggplot2`. 
+
+We will be praticing using different join functions using the dugout data from 2017 (which you have already downloaded) and 2019 (which you can find [here](https://raw.githubusercontent.com/bleds22e/FAST_lab_training/master/data/Dugout_master2019.csv)).
