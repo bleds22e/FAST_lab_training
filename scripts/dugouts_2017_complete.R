@@ -1,16 +1,16 @@
-# R BASICS ####
+# R BASICS #====================================================================
 
 # start in the console #
 # follow 'Intro to R' page on Data Carpentry #
 
-# PACKAGES and DATA ####
+# PACKAGES and DATA #===========================================================
 
 # load the tidyverse (mostly for tidyr, dplyr, and ggplot2)
 library(tidyverse)
 
 # load in data from URL--you've probably already done this
-#download.file(url = "https://raw.githubusercontent.com/bleds22e/FAST_lab_training/master/data/Dugout_master%202017.csv",
-#             destfile = "data/dugout2017.csv")
+# download.file(url = "https://raw.githubusercontent.com/bleds22e/FAST_lab_training/master/data/Dugout_master%202017.csv",
+#               destfile = "data/dugout2017.csv")
 dugouts <- readr::read_csv("data/dugout2017.csv")
 
 # another way to read in your data is by putting the URL directly into the
@@ -25,7 +25,7 @@ dugouts <- readr::read_csv("data/dugout2017.csv")
 # dugouts <- readxl::read_excel("data/Dugout_master 2017.xlsx")
 
 
-# DATA EXPLORATION #
+# DATA EXPLORATION #============================================================
 
 summary(dugouts)
 colnames(dugouts)
@@ -46,7 +46,7 @@ head(dugouts_small) # note the row number and column number where the wonky date
 dugouts_small[5, 2] <- "24-Jul-17" # reassign date value that includes year
 head(dugouts_small) # check that the value changed
 
-# PLOTTING #
+# PLOTTING #====================================================================
 
 # histograms
 hist(dugouts_small$Surface_pH)
@@ -60,3 +60,53 @@ hist(dugouts_small$DOC.mg.L) # now it should run!
 
 # scatter plot
 plot(dugouts_small$Surface_pH, dugouts_small$DOC.mg.L)
+
+# DATA WRANGLING #==============================================================
+# using lubridate, tidyr, dplyr and the pipe
+
+# Packages #
+# library(tidyverse)
+
+# Data #
+data2017 <- dugouts_small
+#data2017 <- readr::read_csv("data/dugout2017.csv")
+data2019 <- readr::read_csv("https://raw.githubusercontent.com/bleds22e/FAST_lab_training/master/data/Dugout_master2019.csv")
+
+# DPLYR: select, filter, mutate ####
+
+# a lot of things that should be numeric are getting read in as characters
+str(data2017)
+
+# we can use mutate with one column to apply a function to that column
+data2017 %>% 
+  mutate(DOC.uM = as.numeric(DOC.uM))
+
+# we can also use mutate across multiple columns with the across function
+# this is fairly advanced--I had to look up how it works!
+# I did that by typing ?mutate in my console and scrolling down to the examples
+# at the bottom of the help page.
+data2017 %>% 
+  mutate(across(NH3.mg.N.L:DIC.uM, as.numeric))
+
+# LUBRIDATE: easily working with dates and times #
+# lubridate is part of the tidyverse and gets installed when you install the tidyverse
+# however, it isn't one of the "core" packages that gets loaded into R when you
+# use the library function to load tidyverse. Therefore, we need to use the 
+# library function to load in lubridate on its own here
+library(lubridate)
+
+?dmy
+# we can use lubridate functions with the mutate function
+data2017 %>% 
+  mutate(Date = lubridate::dmy(Date))
+
+# if we look at the structure of data2017, we see that nothing has changed. Why?
+str(data2017)
+
+# we can string multiple statements together using pipes
+data2017 <- data2017 %>% 
+  mutate(DOC.uM = as.numeric(DOC.uM),
+         Date = dmy(Date)) %>% 
+  mutate(across(NH3.mg.N.L:DIC.uM, as.numeric))
+
+
