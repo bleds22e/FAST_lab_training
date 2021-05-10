@@ -66,3 +66,13 @@ Start RStudio by double-clicking the icon and then, in the "Console," type: `ins
 
 ### Dugout Data
 We'll be using some dugout data from 2017 during these sessions. We will be reading the data into R from the URL to start off. You can get to the raw data (and the URL you will need to copy) by clicking [here](https://raw.githubusercontent.com/bleds22e/FAST_lab_training/master/data/Dugout_master%202017.csv).
+
+# Workshops
+
+## Session 1 -- May 6, 2021
+For the first session, we talked about the benefits of R and RStudio, setting up RProjects, assigning values to objects, vectors, and subsetting data. If you want to review these topics or read a little more about them, check out the "Before we start" and "Intro to R" sections of the [Data Carpentry for Ecologists R lessons](https://datacarpentry.org/R-ecology-lesson/00-before-we-start.html).
+
+We also started exploring some of the dugout data from 2017. To do this, we downloaded and read in the dugout data file (linked above). We talked a little bit about dataframes, including how to subset them, and we did some quick plots. You can find all of the code for that [here](https://raw.githubusercontent.com/bleds22e/FAST_lab_training/master/scripts/dugouts_2017_complete.R). But there is a lot more to learn! I probably won't cover too much more of what is on the ["Starting with data" page](https://datacarpentry.org/R-ecology-lesson/02-starting-with-data.html), but I would recommend working through it on your own. It covers some concepts that will likely be helpful in the future. 
+
+## Session 2 -- May 12, 2021
+We will be learning how to work with dates and how to make and work with tidy data. To do so, we will use a number of packages from the `tidyverse`, including `lubridate`, `tidyr`, and `dplyr`. To learn more about the `tidyverse` and the packages in it, you can visit the [`tidyverse` webpage](https://www.tidyverse.org/). The RStudio website also has links to a number of _very_ helpful [cheatsheets](https://www.rstudio.com/resources/cheatsheets/) for many R topics and specific packages. I particularly recommend downloading cheatsheets for RStudio IDE, `readr`, `tidyr`, `dplyr`, `lubridate`, `stringr`, and `ggplot2`. 
