@@ -11,12 +11,18 @@ library(tidyverse)
 # load in data from URL--you've probably already done this
 #download.file(url = "https://raw.githubusercontent.com/bleds22e/FAST_lab_training/master/data/Dugout_master%202017.csv",
 #             destfile = "data/dugout2017.csv")
-dugouts <- readr::read_csv("data/dugout2017.csv", skip_empty_rows = TRUE)
+dugouts <- readr::read_csv("data/dugout2017.csv")
 
 # another way to read in your data is by putting the URL directly into the
 # read_csv function. This will read the data into your environment but
 # will not download the data into your project
 # dugouts <- readr::read_csv("https://raw.githubusercontent.com/bleds22e/FAST_lab_training/master/data/Dugout_master%202017.csv")
+
+# you can use a different package (readxl) to read in Excel files:
+# I recommend converting all of your Excel files to csv (Save As and then change
+# the file format to csv), but when working with other people's data, you might
+# have to read in Excel files
+# dugouts <- readxl::read_excel("data/Dugout_master 2017.xlsx")
 
 
 # DATA EXPLORATION #
