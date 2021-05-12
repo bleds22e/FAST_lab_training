@@ -73,7 +73,8 @@ library(tidyverse)
 
 # if we use the na argument, the default column changes to double
 # we can explore the columns that should be numeric to see what the issues are
-data2017 <- readr::read_csv("data/dugout2017.csv", na = c("", "NA", "#N/A", "#VALUE!")) 
+data2017 <- readr::read_csv("data/dugout2017.csv", 
+                            na = c("", "NA", "#N/A", "#VALUE!")) 
 
 # explore some columns that should be numeric but are reading as character
 
@@ -85,27 +86,41 @@ data2017[5, 4] <- "24-Jul-17" # reassign date value that includes year
 # DPLYR: select, filter, mutate ####
 
 # SELECT #
+
+select(data2017, Site_ID, Date, Surface_pH, Chla)
+select(data2017, -Chla)
+
 subset2017 <- select(data2017, Site_ID, Date, Surface_Cond, SO4.mg.L)
 
 # FILTER #
+filter(subset2017, Surface_Cond > 1000)
 
+select(filter(data2017, Surface_Cond > 1000), Site_ID, Date, Surface_Cond)
+
+select(data2017, Site_ID, Date, Surface_Cond, SO4.mg.L) %>% 
+  filter(Surface_Cond > 1000)
+
+data2017 %>% 
+  select(Site_ID, Date, Surface_Cond, SO4.mg.L) %>% 
+  filter(Surface_Cond > 1000)
 
 # MUTATE # 
 # a lot of things that should be numeric are getting read in as characters
 str(subset2017)
+subset2017$SO4.mg.L
 
 # we can use mutate with one column to apply a function to that column
 as.numeric(subset2017$SO4.mg.L)
 
 subset2017 %>% 
-  mutate(SO4.mg.L = as.numeric(SO4.mg.L))
+  mutate(subset2017, SO4.mg.L = as.numeric(SO4.mg.L))
 
 # LUBRIDATE: easily working with dates and times #
 # lubridate is part of the tidyverse and gets installed when you install the tidyverse
 # however, it isn't one of the "core" packages that gets loaded into R when you
 # use the library function to load tidyverse. Therefore, we need to use the 
 # library function to load in lubridate on its own here
-# library(lubridate)
+library(lubridate)
 
 ?dmy
 # we can use lubridate functions with the mutate function
@@ -135,6 +150,13 @@ pH_DOC_2017 <- data2017 %>%
 # just explain group_by? maybe as east/west? urban/rural?
 # summarize average pH and DOC
 
+pH_DOC_2017 %>% 
+  summarise(pH_avg = mean(Surface_pH), DOC_avg = mean(DOC.mg.L))
+
+# whoops! we have some NAs to deal with
+pH_DOC_2017 %>% 
+  summarise(pH_avg = mean(Surface_pH), DOC_avg = mean(!is.na(DOC.mg.L)))
+
 # JOINS #
 
 # 2019 data
@@ -142,6 +164,8 @@ data2019 <- readr::read_csv("https://raw.githubusercontent.com/bleds22e/FAST_lab
                             na = c("", "NA", "#N/A", "#VALUE!"))
 
 # check out Cloud (%) column to see what is going on there
+data2019$`Cloud (%)`
+
 # using stringr
 data2019 <- data2019 %>% 
   mutate(Cloud_perc = stringr::str_replace(.$`Cloud (%)`, "%", ""),
@@ -166,13 +190,27 @@ pH_DOC_2019 <- full_join(pH_2019, DOC_2019)
 # show why total number of rows is greater than either 2017 or 2019 alone
 all_pH_DOC <- full_join(pH_DOC_2017, pH_DOC_2019, by = c("Site_ID" = "Site"))
 
-# this was just for a demonstration
+# code above was just for a demonstration--not tidy!
 # a better idea would be to bind rows
+# this will give us a good example of tidy data
 pH_DOC_2017 <- pH_DOC_2017 %>% 
   select(Site = Site_ID, Year, Surface_pH, DOC.mg.L)
 pH_DOC_2019 <- pH_DOC_2019 %>% 
   select(Site, Year, Surface_pH, DOC.mg.L)
 all_pH_DOC <- bind_rows(pH_DOC_2017, pH_DOC_2019)
+
+
+# GROUP BY #
+
+# without group by
+all_pH_DOC %>% 
+  summarise(pH_avg = mean(Surface_pH),
+            DOC_avg = mean(!is.na(DOC.mg.L)))
+
+all_pH_DOC %>% 
+  group_by(Year) %>% 
+  summarise(pH_avg = mean(Surface_pH),
+            DOC_avg = mean(!is.na(DOC.mg.L)))
 
 # PIVOT_WIDER and PIVOT_LONGER #
 
@@ -182,5 +220,5 @@ all_pH_DOC <- bind_rows(pH_DOC_2017, pH_DOC_2019)
                values_to = "Value"))
 
 (wider<- longer %>% 
-    pivot_wider(names_from = Year,
+    pivot_wider(names_from = Measurement,
                 values_from = Value))
