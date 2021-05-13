@@ -10,7 +10,7 @@ library(tidyverse)
 # Data #
 
 # if we use the "na" argument, the default column changes to double
-data2017 <- readr::read_csv("data/dugout2017.csv", 
+data2017 <- readr::read_csv("data_raw/dugout2017.csv", 
                             na = c("", "NA", "#N/A", "#VALUE!")) 
 
 # make some quick fixes to the dataframe (from dugouts_2017_complete.R)
