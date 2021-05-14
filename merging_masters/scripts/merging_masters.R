@@ -37,7 +37,7 @@ master2017 <- master2017 %>%
          Deep_DO_mg.L = Deep_DO.mg.L, Deep_cond = Deep_Cond, Deep_sal_ppt = 
          Deep_Sal.ppt, Deep_pH, TDS_mg.L = TDS.mg.L, YSI_atm, Core_length_cm = 
          `Core_length (cm)`, Sediment_depth, Bottle_temp_in = Bottle_Temp_In, 
-         Bottle_temp_out, Tows, Floating_chamber = `Floating_chamberY/N`,
+         Bottle_temp_out, Tows, Floating_chamber = `Floating_chamberY/N`, Chl_total,
          Chla, NH3_mg.N.L = NH3.mg.N.L, SRP_mg.P.L = SRP.mg.P.L, 
          Nitrate_Nitrite_ug.N.L = Nitrate_Nitrite.ug.N.L, DIN_ug.N.L, TP_mg.P.L = 
          TP.mg.P.L, TN_ug.N.L = TN.ug.N.L, NP_ratio, TN_TP, DIC_mg.L = DIC.mg.L, 
