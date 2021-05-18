@@ -1,9 +1,9 @@
 #########################################################
 #####   Living Data Project -- Data Management      #####
-#####   Data Manipulation $ Data Wrangling          #####
+#####   Data Manipulation & Data Wrangling          #####
 #####   Introduction to some useful packages        #####
 #########################################################
-#####   Self-directed tutorial                      #####
+#####            Self-directed tutorial             #####
 #########################################################
 
 
@@ -12,46 +12,75 @@
 
 ## Working Directory ##
 
-## check if working directory is set to current folder
-getwd()   
-# if it is not the correct folder, use setwd() to set it to the correct folder
-# alternatively, in the panel with the "Files" tab, navigate to the correct folder,
-# then click "More" (with the gear next to it), and select "Set As Working Directory"
+# We haven't spent much time talking about working directories specifically 
+# because working within projects ensures that your working directory doesn't
+# change--one of their major benefits.
 
+# To make sure you are in the correct working directory and your file paths 
+# will work correctly, be sure you have put the files and scripts in the places
+# listed below (spelled the same way, too!):
+#  - this script should be in your "scripts" folder
+#  - in your "data_raw" folder, you should have a folder called "BWG_database"
+#    with a number of CSV files
 
 ## Packages ##
 
-### import (or install) required packages
+### load (or install, then load) required packages
 library(tidyverse)
 library(lubridate)
 
-## to install missing packages, go to "Tools" -> "Install Packages..."  ~or~
-## run install.packages() with the package name in quotes inside the parentheses
-## after installing via either option, run the code above again (library())
-
+install.packages("rgdal") # if you run into issues installing rgdal, don't worry!
+                          # we only use it at the very end, and you can skip it
+library(rgdal)
 
 ## Import Files ##
 
 ## what files are in the BWG database
-myfiles = list.files(path = "BWG_database/", pattern = "*.csv", full.names = TRUE)
+myfiles <-list.files(path = "data_raw/BWG_database/", 
+                     pattern = "*.csv", full.names = TRUE)
 myfiles
 
-# import all tables as separate data frames, remove file path and file extensions (.csv)
+# import csv files as separate data frames, remove file path and file extensions
 # don't worry about what exactly this code is saying--just run it :)
-list2env(lapply(setNames(myfiles, make.names(gsub(".*1_", "", tools::file_path_sans_ext(myfiles)))), 
+list2env(lapply(setNames(myfiles, 
+                         make.names(gsub(".*1_", "", 
+                                         tools::file_path_sans_ext(myfiles)))), 
          read.csv), envir = .GlobalEnv)
+
+
+
+### BACKGROUND on the DATA -----------------------------------------------------
+
+# These data are from the Bromeliad Working Group; you can find more info about
+# the working group here: https://www.zoology.ubc.ca/~srivast/bwg/
+
+# Bromeliads are epiphytic plants (plants which grow non-parasitically on other)
+# plants. They are found throughout the tropics. Often, the center of the plant
+# will fill up with rainwater and be inhabited by invertebrate fauna. These
+# microcosms are ideal for studying many aspects of community ecology, such as
+# food-web structure and ecosystem function.
+
+# The datasets included are relational--at least one column in a dataset will
+# match up with a column in another dataset.
+
+# NOTE:
+# There is a Power Point slide in the BWG_database folder that includes brief 
+# descriptions of each dataset and shows which variables connect each dataset. 
+# I definitely recommend taking a look at that slide before digging into the
+# tutorial!
+
 
 
 ### Part 1: DATA MANIPULATION AND JOINING TABLES -------------------------------
 
-## some of this may be review for you (especially if you already took the 
+## Some of this may be review for you (especially if you already took the 
 ## Synthesis Statistics module). Feel free to just skip over the sections you 
 ## are already comfortable with (but still run the code).
 
 
 
 ### The pipe: %>% ###
-## keyboard shortcut: Ctrl+shift+m / cmd+shift+m
+## keyboard shortcut: Ctrl+shift+M / cmd+shift+M
 
 # the pipe %>% allows for "chaining", which means that you can invoke multiple 
 # method calls without needing variables to store the intermediate results.
@@ -74,7 +103,7 @@ result <- group_by(mtcars, cyl) %>%
   summarise(meanMPG = mean(mpg))
 result
 
-# using the pipe, we did not have to ceate an intermediate object (result_int)
+# using the pipe, we did not have to create an intermediate object (result_int)
 
 # remove the two objects from global environment
 rm(result)
@@ -134,6 +163,8 @@ bromeliads_selected %>%
   arrange(desc(volume))
 
 
+# We'll be talking about ggplot2 much more down the road! For now, just run the
+# code and enjoy the pretty plots :)
 
 ### GGPLOT2: plot relationship of volume and detritus
 ggplot(bromeliads_selected, aes(x = detritus, y = volume, color = species)) +
@@ -163,18 +194,19 @@ bromeliads_selected %>%
   filter(species == "Guzmania_sp")
 
 ## we can also filter for multiple species
+# the %in% function filters for values in the vector which follows it
 bromeliads_selected %>%
   arrange(volume) %>%
   filter(species %in% c("Guzmania_sp", "Vriesea_sp"))
 
 ## we may also want all bromeliads in the Vriesea genus
-# for that we can use stringr::str_detect 
+# for that we can use stringr::str_detect
 bromeliads_selected %>%
   arrange(volume) %>%
   filter(str_detect(species, "Vriesea"))
 
 ## some species are only found in bromeliads with a maximum volume > 100 ml
-# (let's use filter to subset for Guzmania bromeliads > 100 ml only
+# (let's use filter to subset for Guzmania bromeliads > 100 ml only)
 bromeliads_selected %>%
   arrange(volume) %>%
   filter(species == "Guzmania_sp",
@@ -243,7 +275,8 @@ bromeliads_selected %>%
 
 ### DPLYR::TRANSMUTE ###
 ## maybe we are only interested in the average well volume, without wanting the 
-## volume column and the num_leaf column
+## volume column and the num_leaf column. The transumute function removes the
+## columns (whereas mutate creates a new column while leaving the originals)
 bromeliads_selected %>%
   transmute(bromeliad_id, species, av_well_volume = volume / num_leaf)
 
@@ -357,7 +390,7 @@ bromeliad_visits <- bromeliads_selected %>%
 head(bromeliad_visits)
 
 ## NOTE: using left_join (as opposed to inner_join) ensures that all rows in the 
-## bromeliad table are preserved. However, in this case this does not make a 
+## bromeliad table are preserved. However, in this case, this does not make a 
 ## difference, as all visit_id keys are represented in both tables.
 
 
@@ -401,7 +434,8 @@ str(abundance)
 
 
 ## How many morphospecies are there in the species pool?
-# (since R is case sensitive, it is advised to always convert everything to lower case when working with strings)
+# (since R is case sensitive, it is advised to always convert everything to
+# lower case when working with strings)
 morphospecies <- str_to_lower(levels(as.factor(abundance$bwg_name)))
 morphospecies # these are all the morphospecies
 length(morphospecies) # there are 40 morphospecies
@@ -411,7 +445,8 @@ length(morphospecies) # there are 40 morphospecies
 # we can use the str_match function to extract all diptera
 str_match(morphospecies, "diptera")
 
-# we can use PLYR::COUNT (note: do not import plyr from your library, as some functions conflict with dplyr)
+# we can use PLYR::COUNT (note: do not import plyr from your library, as some 
+# functions conflict with dplyr)
 plyr::count(str_match(morphospecies, "diptera"))
 
 # alternatively, use STR_COUNT and take the sum
@@ -437,6 +472,7 @@ year(visits$date)
 month(visits$date)
 month(visits$date, label = TRUE, abbr = FALSE)
 day(visits$date)
+yday(visits$date) # day of year
 
 max(visits$date) # the oldest date
 min(visits$date) # the newest date
@@ -467,19 +503,6 @@ xy
 # transform to UTM coordinate system
 xy_utm <- spTransform(xy, CRS("+proj=utm +zone=16 +datum=WGS84"))
 xy_utm
-
-#####
-
-
-### TAXIZE and MYTAI: extracting taxonomic data ###
-
-# extract the taxonomic classification for bromeliad-dwelling damselflies (M. modesta)
-#taxize::classification
-classification("Mecistogaster modesta", db = 'ncbi')
-
-# what other species are in the Mecistogaster genus?
-# myTAI::taxonomy
-taxonomy(organism = "Mecistogaster" , db = "ncbi", output = "children" )
 
 
 
