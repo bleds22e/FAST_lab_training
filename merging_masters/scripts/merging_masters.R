@@ -4,30 +4,34 @@ library(tidyverse)
 
 # DATA #
 
-master2017 <- read_csv("merging_masters/data/dugout_master2017.csv",
+master2017 <- read_csv("data/dugout_master2017.csv",
                        na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
-# make some quick fixes to the dataframe (from dugouts_2017_complete.R)
-master2017 <- master2017[-(103:104),]
-master2017[5, 4] <- "24-Jul-17" # reassign date value that includes year
 
-master2018 <- read_csv("merging_masters/data/dugout_master2018.csv",
+# make some quick fixes to the dataframe (from dugouts_2017_complete.R)
+master2017 <- master2017[-(103:104),] # remove last two columns of NAs
+master2017[5, 4] <- "24-Jul-17" # reassign date value that includes year
+master2017 <- master2017[-(2:3),] # remove sorting and site name columns
+
+master2018 <- read_csv("data/dugout_master2018.csv",
                         na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"),
                         col_types = cols(Time = col_time("%H:%M")))
-master2019 <- read_csv("merging_masters/data/dugout_master2019.csv",
+master2019 <- read_csv("data/dugout_master2019.csv",
+                       na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
+master2020 <- read_csv("data/dugout_master2020.csv",
                        na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
 
 # 2017 data
 master2017 <- master2017 %>% 
   # add columns that are in the 2018 or 2019 data but not 2017
-  add_column(Chl_total = NA, DIN_ug.N.L = NA, MC_ug.L = NA, d15N_bulk_POM = NA,
+  add_column(Bottle2_temp_in = NA, Bottle2_temp_out = NA,
+             Chl_total = NA, DIN_ug.N.L = NA, MC_ug.L = NA, d15N_bulk_POM = NA,
              d13C_bulk_POM = NA, ugN_bulk_POM = NA, ugC_bulk_POM = NA, 
              PercentN_bulk_POM = NA, PercentC_bulk_POM = NA, C_N_POM = NA,
-             TA_DIC_umol = NA, TA_CO2_umol = NA, Rn_dpm.L = NA, 
-             Elevation_m = NA) %>%
+             Rn_dpm.L = NA, Elevation_m = NA) %>%
   # order columns and rename all the columns with standard format
   # first word uppercase, subsequent words lowercase, separated by _
   # . is used to separate components of units with more than one component 
-  select(Site_ID:Time, Latitude = latitude, Longitude = longitude, Air_temp, 
+  select(Site_ID, Date, Time, Latitude = latitude, Longitude = longitude, Air_temp, 
          Cloud_perc = `Cloud (%)`, Wind_km.hr, Field_team, Secchi_m = Secchi.m, 
          Depth_m = Depth.m, Max_depth_m = Max_depth.m,
          DO_calibration_perc = `DO Calibration%`, Surface_temp = Surface_Temp, 
@@ -37,7 +41,8 @@ master2017 <- master2017 %>%
          Deep_DO_mg.L = Deep_DO.mg.L, Deep_cond = Deep_Cond, Deep_sal_ppt = 
          Deep_Sal.ppt, Deep_pH, TDS_mg.L = TDS.mg.L, YSI_atm, Core_length_cm = 
          `Core_length (cm)`, Sediment_depth, Bottle_temp_in = Bottle_Temp_In, 
-         Bottle_temp_out, Tows, Floating_chamber = `Floating_chamberY/N`, Chl_total,
+         Bottle_temp_out, Bottle2_temp_in, Bottle2_temp_out, 
+         Tows, Floating_chamber = `Floating_chamberY/N`, Chl_total,
          Chla, NH3_mg.N.L = NH3.mg.N.L, SRP_mg.P.L = SRP.mg.P.L, 
          Nitrate_Nitrite_ug.N.L = Nitrate_Nitrite.ug.N.L, DIN_ug.N.L, TP_mg.P.L = 
          TP.mg.P.L, TN_ug.N.L = TN.ug.N.L, NP_ratio, TN_TP, DIC_mg.L = DIC.mg.L, 
@@ -45,32 +50,162 @@ master2017 <- master2017 %>%
          SO4.mg.L, Alk_mg.L = Alk.mg.L, MC_ug.L, pCO2, CO2_uM = CO2.uM, 
          CO2_uM_error = CO2.uM.error, pCH4, CH4_uM = CH4.uM, CH4_uM_error = 
          CH4.uM.error, pN2O, N2O_nM = N2O.nM, N2O_nM_error = N2O.nM.error, 
-         d15N_bulk:PercentC_bulk, Sediment_C_N = sediment_C_N, d15N_bulk_POM:C_N_POM,
+         d15N_bulk:PercentC_bulk, Sediment_C_N = sediment_C_N, d15N_org:PercentC_org, 
+         Sediment_C_N_org = `sediment_C_Norg`, d15N_bulk_POM:C_N_POM,
          d2H:Regime, Water_source = Water_Source, Residence_time = RT, 
          Water_class, d_excess:Inflow, Land_use = Landuse, Age_years = Age.years,
-         NP_ratio2 = NP.ratio, TA_DIC_umol, TA_CO2_umol, B_F_max = b.f.max, 
-         B_F_min = b.f.min, Rn_dpm.L, Elevation_m, Area_m2 = Area.m, Perimeter, 
-         Volume_m3 = Volume.m3, SI, General_comments = `General Comments`) %>% 
+         NP_ratio2 = NP.ratio, B_F_max = b.f.max, B_F_min = b.f.min, Rn_dpm.L, 
+         Elevation_m, Area_m2 = Area.m, Perimeter, Volume_m3 = Volume.m3, SI, 
+         General_comments = `General Comments`) %>% 
   # calculate the columns missing columns that we can
   mutate(Date = lubridate::dmy(Date))
   # mutate(DIN_ug.N.L = (NH3_mg.N.L*1000) + Nitrate_Nitrite_ug.N.L)
   #   - mutate function not working because Nitrate_Nitrite_ug.N.L column is a 
   #     character column due to "<LOD" values
-
-  
   
 # 2018 data  
 master2018 <- master2018 %>% 
+  add_column(Core_length_cm = NA, Sediment_depth = NA, Bottle_temp_in = NA, 
+             Bottle_temp_out = NA, Bottle2_temp_in = NA, Bottle2_temp_out = NA, 
+             Tows = NA, Floating_chamber = NA, TN_TP = NA, SO4_mg.L =  NA, Alk_mg.L = NA, 
+             d15N_bulk = NA, d13C_bulk = NA, mgN_bullk = NA, mgC_bulk = NA,
+             PercentN_bulk = NA, PercentC_bulk = NA, Sediment_C_N = NA, 
+             d15N_org = NA, d13_org = NA, mgN_org = NA, mgC_org = NA, PercentN_org = NA, 
+             PercentC_org = NA, Sediment_C_N_org = NA, Regime = NA, d_excess = NA, 
+             delI180 = NA, delI2H = NA, Inflow = NA, NP_ratio2 = NA, Perimeter = NA, 
+             Volume_m3 = NA, SI = NA) %>% 
   select(Site_ID, Date, Time, Latitude = latitude, Longitude = longitude, 
-         Air_temp, Cloud_perc = `Cloud (%)`, Wind_km.hr, Field_team)
+         Air_temp, Cloud_perc = `Cloud (%)`, Wind_km.hr, Field_team, Secchi_m = Secchi.m, 
+         Depth_m = Depth.m, Max_depth_m = Max_depth.m,
+         DO_calibration_perc = `DO Calibration%`, Surface_temp = Surface_Temp, 
+         Surface_DO_sat = Surface_DO.sat, Surface_DO_mg.L = Surface_DO.mg.L,
+         Surface_cond = Surface_Cond, Surface_sal_ppt = Surface_Sal.ppt, Surface_pH, 
+         Deep_temp = Deep_Temp, Deep_DO_sat = Deep_DO.sat, Deep_DO_mg.L = Deep_DO.mg.L, 
+         Deep_cond = Deep_Cond, Deep_sal_ppt = Deep_Sal.ppt, Deep_pH, 
+         TDS_mg.L = TDS.mg.L, YSI_atm, Core_length_cm, Sediment_depth, Bottle_temp_in, 
+         Bottle_temp_out, Bottle2_temp_in, Bottle2_temp_out, Tows, Floating_chamber, 
+         Chl_total, Chla, NH3_mg.N.L = NH3.mg.N.L, SRP_mg.P.L = SRP.mg.P.L, 
+         Nitrate_Nitrite_ug.N.L = Nitrate_Nitrite.ug.N.L, DIN_ug.N.L = DIN.ug.N.L, 
+         TP_mg.P.L = TP.mg.P.L, TN_ug.N.L = TN.ug.N.L, NP_ratio, TN_TP, DIC_mg.L = DIC.mg.L, 
+         DIC_uM = DIC.uM, DOC_mg.L = DOC.mg.L, DOC_uM = DOC.uM, SO4_mg.L, Alk_mg.L, 
+         MC_ug.L = MC.ug.L, pCO2, CO2_uM = CO2.uM, CO2_uM_error = CO2.uM.error, 
+         pCH4, CH4_uM = CH4.uM, CH4_uM_error = CH4.uM.error, pN2O, N2O_nM = N2O.nM, 
+         N2O_nM_error = N2O.nM.error, d15N_bulk, d13C_bulk, mgN_bullk, mgC_bulk,
+         PercentN_bulk, PercentC_bulk, Sediment_C_N, d15N_org, d13_org, mgN_org, 
+         mgC_org, PercentN_org, PercentC_org, Sediment_C_N_org, d15N_bulk_POM:C_N_POM, 
+         d2H, d18O, EtoI, Regime, Water_source = `Water Source`, Residence_time = 
+           Residence_Time, Water_class, d_excess, delI180, delI2H, Inflow, 
+         Land_use = Landuse, Age_years = Age.years, NP_ratio2, B_F_max = b.f.max, 
+         B_F_min = b.f.min, Rn_dpm.L = Rn.dpm.L, Elevation_m = elevation.m, 
+         Area_m2 = Area.m2, Perimeter, Volume_m3, SI, General_comments = `General Comments`) %>% 
+  mutate(Date = lubridate::dmy(Date))
+
+# 2019 data
 master2019 <- master2019 %>% 
+  add_column(Bottle2_temp_in = NA, Bottle2_temp_out = NA, DIN_ug.N.L = NA, TN_TP = NA,
+             SO4_mg.L = NA, Alk_mg.L = NA, MC_ug.L = NA, Sediment_C_N_org = NA, 
+             d15N_bulk_POM = NA, d13C_bulk_POM = NA, ugN_bulk_POM = NA, ugC_bulk_POM = NA, 
+             PercentN_bulk_POM = NA, PercentC_bulk_POM = NA, C_N_POM = NA, d_excess = NA, 
+             delI180 = NA, delI2H = NA, Inflow = NA, Elevation_m = NA, Area_m2 = NA, 
+             Perimeter = NA, Volume_m3 = NA, SI = NA) %>% 
   select(Site_ID = Site, Date, Time, Latitude = latitude, Longitude = longitude,
-         Air_temp, Cloud_perc = `Cloud (%)`, Wind_km.hr, Field_team)
+         Air_temp, Cloud_perc = `Cloud (%)`, Wind_km.hr, Field_team, Secchi_m = Secchi.m, 
+         Depth_m = Depth.m, Max_depth_m = Max_depth.m,
+         DO_calibration_perc = `DO Calibration%`, Surface_temp = Surface_Temp, 
+         Surface_DO_sat = Surface_DO.sat, Surface_DO_mg.L = Surface_DO.mg.L,
+         Surface_cond = Surface_Cond, Surface_sal_ppt = Surface_Sal.ppt, Surface_pH, 
+         Deep_temp = Deep_Temp, Deep_DO_sat = Deep_DO.sat, Deep_DO_mg.L = Deep_DO.mg.L, 
+         Deep_cond = Deep_Cond, Deep_sal_ppt = Deep_Sal.ppt, Deep_pH, TDS_mg.L = 
+           TDS.mg.L, YSI_atm, Core_length_cm = `Core_length (cm)`, Sediment_depth, 
+         Bottle_temp_in = Bottle_Temp_In, Bottle_temp_out, Bottle2_temp_in, Bottle2_temp_out, Tows, 
+         Floating_chamber = `Floating_chamberY/N`, Chl_total,Chla, NH3_mg.N.L = NH3.mg.N.L, 
+         SRP_mg.P.L = SRP.mg.P.L, Nitrate_Nitrite_ug.N.L = Nitrate_Nitrite.ug.N.L, 
+         DIN_ug.N.L, TP_mg.P.L = TP.mg.P.L, TN_ug.N.L = TN.ug.N.L, NP_ratio, TN_TP, 
+         DIC_mg.L = DIC.mg.L, DIC_uM = DIC.uM, DOC_mg.L = DOC.mg.L, DOC_uM = DOC.uM,
+         SO4_mg.L, Alk_mg.L, MC_ug.L, pCO2, CO2_uM = CO2.uM, CO2_uM_error = CO2.uM.error, 
+         pCH4, CH4_uM = CH4.uM, CH4_uM_error = CH4.uM.error, pN2O, N2O_nM = N2O.nM, 
+         N2O_nM_error = N2O.nM.error, d15N_bulk:PercentC_bulk, Sediment_C_N = 
+           sediment_C_N, d15N_org:PercentC_org, Sediment_C_N_org, d15N_bulk_POM:C_N_POM,
+         d2H:Regime, Water_source = `Water Source`, Residence_time = Residence_Time, 
+         Water_class, d_excess:Inflow, Land_use = Landuse, Age_years = Age.years,
+         NP_ratio2 = NP.ratio, B_F_max = b.f.max, B_F_min = b.f.min, Rn_dpm.L = Rn.dpm.L,
+         Elevation_m, Area_m2, Perimeter, Volume_m3, SI, General_comments = `General Comments`) %>% 
+  mutate(Date = lubridate::dmy(Date))
 
-site_descr <- bind_rows(site2017, site2018, site2019) # 2018 time in decimals
+# 2020 data
+master2020 <- master2020 %>% 
+  add_column(Field_team = NA, TDS_mg.L = NA, Core_length_cm = NA, Sediment_depth = 
+               NA, Bottle_temp_in = NA, Bottle2_temp_in = NA, Tows = NA, 
+             Floating_chamber = NA, Chl_total = NA, Chla = NA, NH3_mg.N.L = NA, 
+             SRP_mg.P.L = NA, Nitrate_Nitrite_ug.N.L = NA, DIN_ug.N.L = NA, TP_mg.P.L = NA, 
+             TN_ug.N.L = NA, NP_ratio = NA, TN_TP = NA, DIC_mg.L = NA, DIC_uM = NA, 
+             DOC_mg.L = NA, DOC_uM = NA, SO4_mg.L = NA, Alk_mg.L = NA, MC_ug.L = NA, pCO2 = NA, 
+             CO2_uM = NA, CO2_uM_error = NA, pCH4 = NA, CH4_uM = NA, CH4_uM_error = NA, 
+             pN2O = NA, N2O_nM = NA, N2O_nM_error = NA, 
+             d15N_bulk = NA, d13C_bulk = NA, mgN_bullk = NA, mgC_bulk = NA,
+             PercentN_bulk = NA, PercentC_bulk = NA, Sediment_C_N = NA, 
+             d15N_org = NA, d13_org = NA, mgN_org = NA, mgC_org = NA, PercentN_org = NA, 
+             PercentC_org = NA, Sediment_C_N_org = NA, d15N_bulk_POM = NA, d13C_bulk_POM = NA, ugN_bulk_POM = NA, ugC_bulk_POM = NA, 
+             PercentN_bulk_POM = NA, PercentC_bulk_POM = NA, C_N_POM = NA, d2H = NA, 
+             d18O = NA, EtoI = NA, Regime = NA, Water_source = NA, Residence_time = NA, 
+             Water_class = NA, d_excess = NA, delI180 = NA, delI2H = NA, Inflow = NA, 
+             Land_use = NA, Age_years = NA, NP_ratio2 = NA, B_F_max = NA, B_F_min = NA, 
+             Rn_dpm.L = NA, Elevation_m = NA, Area_m2 = NA, Perimeter = NA, Volume_m3 = NA, 
+             SI = NA, General_comments = NA) %>% 
+  select(Site_ID:Time, Latitude = latitude, Longitude = longitude, Air_temp, 
+         Cloud_perc = `Cloud (%)`, Wind_km.hr, Field_team, Secchi_m = Secchi.m, 
+         Depth_m = Depth.m, Max_depth_m = `Sample_depth (m)`, DO_calibration_perc = 
+           `DO Calibration%`, Surface_temp = Surface_Temp, 
+         Surface_DO_sat = Surface_DO.sat, Surface_DO_mg.L = Surface_DO.mg.L,
+         Surface_cond = Surface_Cond, Surface_sal_ppt = Surface_Sal.ppt, Surface_pH, 
+         Deep_temp = Deep_Temp, Deep_DO_sat = Deep_DO.sat, 
+         Deep_DO_mg.L = Deep_DO.mg.L, Deep_cond = Deep_Cond, Deep_sal_ppt = 
+           Deep_Sal.ppt, Deep_pH, TDS_mg.L, YSI_atm, Core_length_cm, Sediment_depth, 
+         Bottle_temp_in, Bottle_temp_out = `Shakey Bottle 1 temp out`, Bottle2_temp_in, 
+         Bottle2_temp_out = `Shakey Bottle 2 temp out`, Tows, Floating_chamber:General_comments) %>% 
+  mutate(Date = lubridate::dmy(Date))
 
+# only chr columns should be Site_ID, Field_team, Floating_chamber, Regime, 
+# Water_source, Water_class, and Land_use #
+# Date should be Date, Time should be 'hms' num, everything else should be num #
 
-  
+# fix chr columns in 2017
+master2017 <- master2017 %>% 
+  mutate(SRP_mg.P.L = as.numeric(SRP_mg.P.L), Nitrate_Nitrite_ug.N.L = 
+           as.numeric(Nitrate_Nitrite_ug.N.L), SO4_mg.L = as.numeric(SO4_mg.L), 
+         Age_years = as.numeric(Age_years)) 
+
+# fix latitude in 2020
+master2020 <- master2020 %>% 
+  mutate(Latitude = as.numeric(Latitude))
+master2020$Latitude
+
+# check for cloud %
+master2017$Cloud_perc # numeric (with decimals)
+master2018$Cloud_perc # chr, has % 
+master2019$Cloud_perc # chr, has %
+master2020$Cloud_perc # numeric
+
+# fix cloud % in 2018
+master2018 <- master2018 %>% 
+  mutate(Cloud_perc = stringr::str_replace(.$Cloud_perc, "%", ""))
+master2018 <- master2018 %>% 
+  mutate(Cloud_perc = as.numeric(Cloud_perc))
+
+# fix cloud % in 2019
+master2019 <- master2019 %>% 
+  mutate(Cloud_perc = stringr::str_replace(.$Cloud_perc, "%", ""))
+master2019 <- master2019 %>% 
+  mutate(Cloud_perc = as.numeric(Cloud_perc))
+
+# fix time in 2020
+master2020$Time
+master2020 <- master2020 %>% 
+  mutate(Time = stringr::str_replace(.$Time, "~", "")) %>% 
+  mutate(Time = stringr::str_replace(.$Time, "AM", "")) %>% 
+  mutate(Time = stringr::str_replace(.$Time, "PM", "")) 
+# need to convert to hms still
+
 # WORK AREA #===================================================================
 
 # DIN_ug.N.L = (NH3_mg.N.L*1000)+Nitrate_Nitrite_ug.N.L
@@ -82,4 +217,5 @@ time_check <- bind_rows(select(master2017, Time),
 
 Date_check <- bind_rows(select(master2017, Date), 
                         select(master2018, Date),
-                        select(master2019, Date))
+                        select(master2019, Date), 
+                        select(master2020, Date))
