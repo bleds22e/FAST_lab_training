@@ -81,4 +81,7 @@ We practiced using different join functions using the dugout data from 2017 (whi
 
 Another resource for working with pipes and tidy data is the next Data Carpentry lesson, ["Manipulating Data"](https://datacarpentry.org/R-ecology-lesson/03-dplyr.html). I definitely recommend working through that page with the rodent data; code for downloading the rodent data is on the previous page, "Starting with Data."
 
-I'll post the other `dplyr` tutorial that I promised ASAP.
+The `tidyverse` tutorial from the Living Data Project is in the r-and-data channel in Slack.
+
+## Session 3 -- June 4, 2021
+For this upcoming session, we'll be introducing `ggplot2`, a powerful plotting package for R that offers a lot of customization for plots. The "gg" part of the package name comes from "Grammar of Graphics" (which is a book? And that's about all I know about that haha). If you'd like a quick overview, you can check out the [`ggplot2` page](https://ggplot2.tidyverse.org/) of the tidyverse webiste. It has a brief description, a link to the RStudio cheatsheet for `ggplot2`, and some additional resources you might find helpful.
