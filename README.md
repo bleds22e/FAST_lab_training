@@ -81,4 +81,4 @@ We practiced using different join functions using the dugout data from 2017 (whi
 
 Another resource for working with pipes and tidy data is the next Data Carpentry lesson, ["Manipulating Data"](https://datacarpentry.org/R-ecology-lesson/03-dplyr.html). I definitely recommend working through that page with the rodent data; code for downloading the rodent data is on the previous page, "Starting with Data."
 
-I'll post the other `dplyr` tutorial that I promised ASAP.
+The `tidyverse` tutorial from the Living Data Project is in the r-and-data channel in Slack.
