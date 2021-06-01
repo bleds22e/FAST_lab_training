@@ -13,8 +13,13 @@ master2017[5, 4] <- "24-Jul-17" # reassign date value that includes year
 master2017 <- master2017[-(2:3),] # remove sorting and site name columns
 
 master2018 <- read_csv("data/dugout_master2018.csv",
-                        na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"),
-                        col_types = cols(Time = col_time("%H:%M")))
+                        na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
+# need to fix this before hms conversion otherwise it switches to NA
+master2018[42, 8] <- "9:38"                       
+master2018 <- master2018 %>% 
+  col_types = cols(Time = col_time("%H:%M")) # does not work anymore(:
+master2018$Time
+
 master2019 <- read_csv("data/dugout_master2019.csv",
                        na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
 master2020 <- read_csv("data/dugout_master2020.csv",
@@ -204,7 +209,55 @@ master2020 <- master2020 %>%
   mutate(Time = stringr::str_replace(.$Time, "~", "")) %>% 
   mutate(Time = stringr::str_replace(.$Time, "AM", "")) %>% 
   mutate(Time = stringr::str_replace(.$Time, "PM", "")) 
-# need to convert to hms still
+master2020[45, 3] <- "13:30"
+# still need to convert to hms
+
+# ADDING IN DATA ####
+
+# read in TIC TOc and water chem data for 2020
+carbon2020 <- read.csv("data/carbon_2020.csv", 
+                        na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
+waterchem2020 <- read.csv("data/water_chem_2020.csv", 
+                            na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
+
+# separate carbon_2020 date from name in sample id column 
+carbon2020 <- carbon2020 %>% 
+  separate(col = Sample.ID, into = c("Site_ID", "Date"), 
+           sep = "/", remove = FALSE) %>% 
+  group_by(Site_ID)
+
+# remove weird name/date combo column in carbon2020
+carbon2020 <- carbon2020[, -(1)]  
+
+# rename columns
+carbon2020 <- carbon2020 %>% 
+  select(Site_ID, Date, TIC_PPM_mg.L.C = TIC..PPM.as.mg.L.C., 
+         TOC_PPM_mg.L.C = TOC..PPM.as.mg.L.C.)
+
+# remove weird x NA columns in waterchem2020
+waterchem2020 <- waterchem2020[-(49:107), -(7:10)]
+
+# rename columns
+waterchem2020 <- waterchem2020 %>% 
+  select(Site_ID = Sample, TN_ug.N.L = TN..ug.N.L., TP_mg.P.L = TP..mg.P.L., 
+         Ammonia_mg.NH3.N.L = Ammonia..mg.NH3.N.L., SRP_mg.P.L = SRP..mg.P.L., 
+         Nitrate_Nitrite_ug.N.L = Nitrate.Nitrite..ug.N.L.)
+
+# join waterchem2020 to master2020 (?)
+master2020 <- master2020 %>% 
+  full_join(waterchem2020, by = "Site_ID")  
+
+# read in chl total data from 2017
+chl_total2017 <- read.csv("data/chl_total_2017.csv", 
+                          na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
+
+# join 2017 chl total with master2017 (?)
+master2017 <- master2017 %>% 
+  full_join(select(chl_total2017, Site_ID, Chla = ChlA.ug.L, 
+                   Chlb = ChlB.ug.L, Chlc = ChlC.ug.L, 
+                   Chl_total = ChlTotal.ug.L), by = "Site_ID")
+
+
 
 # WORK AREA #===================================================================
 
