@@ -1,6 +1,7 @@
 # MERGE MASTER FILES 2017-2020 #### 
 
 library(tidyverse)
+library(hms)
 
 # DATA #
 
@@ -13,13 +14,13 @@ master2017[5, 4] <- "24-Jul-17" # reassign date value that includes year
 master2017 <- master2017[-(2:3),] # remove sorting and site name columns
 
 master2018 <- read_csv("data/dugout_master2018.csv",
-                        na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
+                       na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
 # need to fix this before hms conversion otherwise it switches to NA
-master2018[42, 8] <- "9:38"                       
+master2018[42, 8] <- "9:38"
 master2018 <- master2018 %>% 
-  col_types = cols(Time = col_time("%H:%M")) # does not work anymore(:
-master2018$Time
-
+  mutate(Time = strptime(.$Time, format = "%H:%M")) %>% # converts to POSIXlt
+  mutate(Time = hms::as_hms(Time)) # gets rid of date part
+  
 master2019 <- read_csv("data/dugout_master2019.csv",
                        na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
 master2020 <- read_csv("data/dugout_master2020.csv",
