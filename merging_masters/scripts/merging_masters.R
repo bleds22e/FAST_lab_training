@@ -5,14 +5,15 @@ library(hms)
 
 # DATA #
 
+# 2017 data
 master2017 <- read_csv("data/dugout_master2017.csv",
                        na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
-
 # make some quick fixes to the dataframe (from dugouts_2017_complete.R)
 master2017 <- master2017[-(103:104),] # remove last two columns of NAs
 master2017[5, 4] <- "24-Jul-17" # reassign date value that includes year
 master2017 <- master2017[-(2:3),] # remove sorting and site name columns
 
+# 2018 data
 master2018 <- read_csv("data/dugout_master2018.csv",
                        na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
 # need to fix this before hms conversion otherwise it switches to NA
@@ -20,9 +21,12 @@ master2018[42, 8] <- "9:38"
 master2018 <- master2018 %>% 
   mutate(Time = strptime(.$Time, format = "%H:%M")) %>% # converts to POSIXlt
   mutate(Time = hms::as_hms(Time)) # gets rid of date part
-  
+
+# 2019 data
 master2019 <- read_csv("data/dugout_master2019.csv",
                        na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
+
+# 2020 data
 master2020 <- read_csv("data/dugout_master2020.csv",
                        na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
 
@@ -211,7 +215,9 @@ master2020 <- master2020 %>%
   mutate(Time = stringr::str_replace(.$Time, "AM", "")) %>% 
   mutate(Time = stringr::str_replace(.$Time, "PM", "")) 
 master2020[45, 3] <- "13:30"
-# still need to convert to hms
+master2020 <- master2020 %>% 
+  mutate(Time = strptime(.$Time, format = "%H:%M")) %>% # converts to POSIXlt
+  mutate(Time = hms::as_hms(Time)) # gets rid of date part
 
 # ADDING IN DATA ####
 
