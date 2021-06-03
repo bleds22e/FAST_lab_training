@@ -2,8 +2,9 @@
 
 library(tidyverse)
 library(hms)
+library(stringr)
 
-# DATA #
+# DATA ####
 
 # 2017 data
 master2017 <- read_csv("data/dugout_master2017.csv",
@@ -29,6 +30,58 @@ master2019 <- read_csv("data/dugout_master2019.csv",
 # 2020 data
 master2020 <- read_csv("data/dugout_master2020.csv",
                        na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
+
+# ADDING IN DATA ####
+
+## 2020 ##
+
+# read in TIC TOc and water chem data for 2020
+carbon2020 <- read.csv("data/carbon_2020.csv", 
+                       na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
+waterchem2020 <- read.csv("data/water_chem_2020.csv", 
+                          na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
+
+# separate carbon_2020 date from name in sample id column 
+carbon2020 <- carbon2020 %>% 
+  separate(col = Sample.ID, into = c("Site_ID", "Date"), 
+           sep = "/", remove = FALSE) %>% 
+  group_by(Site_ID)
+
+# remove weird name/date combo column in carbon2020
+carbon2020 <- carbon2020[, -(1)]  
+
+# rename columns
+carbon2020 <- carbon2020 %>% 
+  select(Site_ID, Date, TIC_PPM_mg.L.C = TIC..PPM.as.mg.L.C., 
+         TOC_PPM_mg.L.C = TOC..PPM.as.mg.L.C.)
+
+# remove weird x NA columns in waterchem2020
+waterchem2020 <- waterchem2020[-(49:107), -(7:10)]
+
+# rename columns
+waterchem2020 <- waterchem2020 %>% 
+  select(Site_ID = Sample, TN_ug.N.L = TN..ug.N.L., TP_mg.P.L = TP..mg.P.L., 
+         Ammonia_mg.NH3.N.L = Ammonia..mg.NH3.N.L., SRP_mg.P.L = SRP..mg.P.L., 
+         Nitrate_Nitrite_ug.N.L = Nitrate.Nitrite..ug.N.L.)
+
+# join waterchem2020 to master2020 (?)
+master2020 <- master2020 %>% 
+  full_join(waterchem2020, by = "Site_ID")  
+
+# read in chl total data from 2017
+chl_total2017 <- read.csv("data/chl_total_2017.csv", 
+                          na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
+
+## 2017 ## 
+
+#join 2017 chl total with master2017 (?)
+master2017 <- master2017 %>% 
+  full_join(select(chl_total2017, Site_ID, Chla = ChlA.ug.L, 
+                   Chlb = ChlB.ug.L, Chlc = ChlC.ug.L, 
+                   Chl_total = ChlTotal.ug.L), by = "Site_ID")
+
+
+# MAKE COLUMNS MATCH ####
 
 # 2017 data
 master2017 <- master2017 %>% 
@@ -175,96 +228,49 @@ master2020 <- master2020 %>%
          Bottle2_temp_out = `Shakey Bottle 2 temp out`, Tows, Floating_chamber:General_comments) %>% 
   mutate(Date = lubridate::dmy(Date))
 
+# MATCH COLUMN TYPES ####
+
 # only chr columns should be Site_ID, Field_team, Floating_chamber, Regime, 
 # Water_source, Water_class, and Land_use #
 # Date should be Date, Time should be 'hms' num, everything else should be num #
 
-# fix chr columns in 2017
+# fix chr columns in 2017 --- NEED TO CONVERT TO 10% LOD; ALSO "NV"?
 master2017 <- master2017 %>% 
-  mutate(SRP_mg.P.L = as.numeric(SRP_mg.P.L), Nitrate_Nitrite_ug.N.L = 
-           as.numeric(Nitrate_Nitrite_ug.N.L), SO4_mg.L = as.numeric(SO4_mg.L), 
-         Age_years = as.numeric(Age_years)) 
+  mutate(SRP_mg.P.L = as.numeric(SRP_mg.P.L), 
+         Nitrate_Nitrite_ug.N.L = as.numeric(Nitrate_Nitrite_ug.N.L), #
+         SO4_mg.L = as.numeric(SO4_mg.L)) 
+#  Age_years = as.numeric(Age_years))  I'm thinking we make Age_years a character column for simplicity...
 
 # fix latitude in 2020 -- need to remove all extra spaces (before, after, and by the decimal)
 master2020 <- master2020 %>% 
-  mutate(Latitude = stringr::str_replace_all(.$longitude, fixed(" "), ""))
+  mutate(Latitude = str_replace_all(Latitude, fixed(" "), "")) %>% # remove internal spaces
+  mutate(Latitude = str_trim(Latitude)) # remove spaces from before or after value
 master2020$Latitude
 
-# check for cloud %
-master2017$Cloud_perc # numeric (with decimals)
-master2018$Cloud_perc # chr, has % 
-master2019$Cloud_perc # chr, has %
-master2020$Cloud_perc # numeric
+## Check Cloud % column for Non-numeric Values ## 
+str(master2017$Cloud_perc) # numeric (with decimals)
+str(master2018$Cloud_perc) # chr, has % 
+str(master2019$Cloud_perc) # chr, has %
+str(master2020$Cloud_perc) # numeric
 
 # fix cloud % in 2018
 master2018 <- master2018 %>% 
-  mutate(Cloud_perc = stringr::str_replace(.$Cloud_perc, "%", ""))
-master2018 <- master2018 %>% 
-  mutate(Cloud_perc = as.numeric(Cloud_perc))
-
+  mutate(Cloud_perc = as.numeric(str_replace(Cloud_perc, "%", "")))
 # fix cloud % in 2019
 master2019 <- master2019 %>% 
-  mutate(Cloud_perc = stringr::str_replace(.$Cloud_perc, "%", ""))
-master2019 <- master2019 %>% 
-  mutate(Cloud_perc = as.numeric(Cloud_perc))
+  mutate(Cloud_perc = as.numeric(str_replace(Cloud_perc, "%", "")))
 
-# fix time in 2020
+## Fix Time in 2020 ##
 master2020$Time
 master2020 <- master2020 %>% 
-  mutate(Time = stringr::str_replace(.$Time, "~", "")) %>% 
-  mutate(Time = stringr::str_replace(.$Time, "AM", "")) %>% 
-  mutate(Time = stringr::str_replace(.$Time, "PM", "")) 
+  mutate(Time = str_replace(.$Time, "~", "")) %>% 
+  mutate(Time = str_replace(.$Time, "AM", "")) %>% 
+  mutate(Time = str_replace(.$Time, "PM", "")) 
 master2020[45, 3] <- "13:30"
+
 master2020 <- master2020 %>% 
   mutate(Time = strptime(.$Time, format = "%H:%M")) %>% # converts to POSIXlt
   mutate(Time = hms::as_hms(Time)) # gets rid of date part
-
-# ADDING IN DATA ####
-
-# read in TIC TOc and water chem data for 2020
-carbon2020 <- read.csv("data/carbon_2020.csv", 
-                        na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
-waterchem2020 <- read.csv("data/water_chem_2020.csv", 
-                            na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
-
-# separate carbon_2020 date from name in sample id column 
-carbon2020 <- carbon2020 %>% 
-  separate(col = Sample.ID, into = c("Site_ID", "Date"), 
-           sep = "/", remove = FALSE) %>% 
-  group_by(Site_ID)
-
-# remove weird name/date combo column in carbon2020
-carbon2020 <- carbon2020[, -(1)]  
-
-# rename columns
-carbon2020 <- carbon2020 %>% 
-  select(Site_ID, Date, TIC_PPM_mg.L.C = TIC..PPM.as.mg.L.C., 
-         TOC_PPM_mg.L.C = TOC..PPM.as.mg.L.C.)
-
-# remove weird x NA columns in waterchem2020
-waterchem2020 <- waterchem2020[-(49:107), -(7:10)]
-
-# rename columns
-waterchem2020 <- waterchem2020 %>% 
-  select(Site_ID = Sample, TN_ug.N.L = TN..ug.N.L., TP_mg.P.L = TP..mg.P.L., 
-         Ammonia_mg.NH3.N.L = Ammonia..mg.NH3.N.L., SRP_mg.P.L = SRP..mg.P.L., 
-         Nitrate_Nitrite_ug.N.L = Nitrate.Nitrite..ug.N.L.)
-
-# join waterchem2020 to master2020 (?)
-master2020 <- master2020 %>% 
-  full_join(waterchem2020, by = "Site_ID")  
-
-# read in chl total data from 2017
-chl_total2017 <- read.csv("data/chl_total_2017.csv", 
-                          na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
-
-# join 2017 chl total with master2017 (?)
-master2017 <- master2017 %>% 
-  full_join(select(chl_total2017, Site_ID, Chla = ChlA.ug.L, 
-                   Chlb = ChlB.ug.L, Chlc = ChlC.ug.L, 
-                   Chl_total = ChlTotal.ug.L), by = "Site_ID")
-
-
 
 # WORK AREA #===================================================================
 
