@@ -12,17 +12,7 @@
 # PACKAGES AND DATA #
 library(tidyverse)
 
-data2017 <- read_csv("data/dugout2017.csv")
-data2019 <- read_csv("data/Dugout_master2019.csv")
+data2017 <- read.csv("https://raw.githubusercontent.com/bleds22e/FAST_lab_training/master/data/dugout2017_plotting.csv")
+data2019 <- read_csv("https://raw.githubusercontent.com/bleds22e/FAST_lab_training/master/data/dugout2019_plotting.csv")
 
 # DATA PREP #
-data2017[5,4] <- "24-Jul-17"
-
-data2017_plotting <- data2017 %>% 
-  select(Site_ID, Date, Surface_pH, DOC.mg.L, Landuse) %>% 
-  drop_na()
-write_csv(data2017_plotting, "data/dugout2017_plotting.csv")
-
-data2019_plotting <- data2019 %>% 
-  select(Site_ID, Date, Surface_pH, DOC.mg.L)
-write_csv(data2019_plotting, "data/dugout2019_plotting.csv")
