@@ -239,12 +239,12 @@ master2017 <- master2017 %>%
   mutate(SRP_mg.P.L = as.numeric(SRP_mg.P.L), 
          Nitrate_Nitrite_ug.N.L = as.numeric(Nitrate_Nitrite_ug.N.L), #
          SO4_mg.L = as.numeric(SO4_mg.L)) 
-#  Age_years = as.numeric(Age_years))  I'm thinking we make Age_years a character column for simplicity...
+# Age_years = as.numeric(Age_years))  I'm thinking we make Age_years a character column for simplicity...
 
 # fix latitude in 2020 -- need to remove all extra spaces (before, after, and by the decimal)
 master2020 <- master2020 %>% 
   mutate(Latitude = str_replace_all(Latitude, fixed(" "), "")) %>% # remove internal spaces
-  mutate(Latitude = str_trim(Latitude)) # remove spaces from before or after value
+  mutate(Latitude = as.numeric(str_trim(Latitude))) # remove spaces from before or after value
 master2020$Latitude
 
 ## Check Cloud % column for Non-numeric Values ## 
