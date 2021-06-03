@@ -185,9 +185,9 @@ master2017 <- master2017 %>%
            as.numeric(Nitrate_Nitrite_ug.N.L), SO4_mg.L = as.numeric(SO4_mg.L), 
          Age_years = as.numeric(Age_years)) 
 
-# fix latitude in 2020
+# fix latitude in 2020 -- need to remove all extra spaces (before, after, and by the decimal)
 master2020 <- master2020 %>% 
-  mutate(Latitude = as.numeric(Latitude))
+  mutate(Latitude = stringr::str_replace_all(.$longitude, fixed(" "), ""))
 master2020$Latitude
 
 # check for cloud %
