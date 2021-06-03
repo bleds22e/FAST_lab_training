@@ -17,8 +17,10 @@ data2019 <- read_csv("data/Dugout_master2019.csv")
 
 # DATA PREP #
 data2017[5,4] <- "24-Jul-17"
+
 data2017_plotting <- data2017 %>% 
-  select(Site_ID, Date, Surface_pH, DOC.mg.L, Landuse)
+  select(Site_ID, Date, Surface_pH, DOC.mg.L, Landuse) %>% 
+  drop_na()
 write_csv(data2017_plotting, "data/dugout2017_plotting.csv")
 
 data2019_plotting <- data2019 %>% 
