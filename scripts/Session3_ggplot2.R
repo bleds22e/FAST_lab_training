@@ -4,6 +4,6 @@
 # Data Carpentry ggplot lesson: 
 #     https://datacarpentry.org/R-ecology-lesson/04-visualization-ggplot2.html
 
-# use dugout/wetland data from 2 different years for faceting?
+# usedata from 2 different years for faceting
 # lots of things to use for scatter plots...
-# can use year or D/W for categorical variable for box/violin plots
+# can use year and/or landuse for categorical variable for box/violin plots
