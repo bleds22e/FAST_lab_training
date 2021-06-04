@@ -10,11 +10,6 @@ library(tidyverse)
 data2017 <- read_csv("https://raw.githubusercontent.com/bleds22e/FAST_lab_training/master/data/dugout2017.csv")
 data2019 <- read_csv("https://raw.githubusercontent.com/bleds22e/FAST_lab_training/master/data/dugout2019.csv")
 
-# usedata from 2 different years for faceting
-# lots of things to use for scatter plots...
-# can use year and/or landuse for categorical variable for box/violin plots
-#   - will need to merge landuse data from 2017 with 2019
-
 # DATA PREP ####
 
 # Let's make the dataframes more manageable by selecting only the columns we want
@@ -22,9 +17,10 @@ data2019 <- read_csv("https://raw.githubusercontent.com/bleds22e/FAST_lab_traini
 # Check each column for any issues
 
 data2017 <- data2017 %>% 
-  select(Site_ID, Date, Surface_pH, pCO2, Landuse) %>% 
-  mutate(Date = lubridate::dmy(Date)) %>% 
-  mutate(Year = as.factor(lubridate::year(Date)))
+  select(Site_ID, Date, Surface_pH, pCO2, Landuse) %>% # columns we want
+  mutate(Date = lubridate::dmy(Date)) %>% # convert Date to date col type
+  mutate(Year = as.factor(lubridate::year(Date))) # make Year column 
+  # the factor part means Year will be treated as a categorical variable (rather than numeric value)
 
 data2019<- data2019 %>% 
   select(Site_ID = Site, Date, Surface_pH, pCO2) %>% 
@@ -38,7 +34,7 @@ data2019<- data2019 %>%
 landuse <- select(data2017, Site_ID, Landuse)
 data2019 <- left_join(data2019, landuse)
 
-# bind dataframes together in long format
+# bind data frames together in long format
 data_all <- bind_rows(data2017, data2019) %>% 
   drop_na()
 
@@ -55,7 +51,7 @@ ggplot(data = data_all, mapping = aes(x = Surface_pH, y = pCO2))
 ggplot(data = data_all, mapping = aes(x = Surface_pH, y = pCO2)) + 
   geom_point()
 
-# build plots iteratively -- demonstrate + functionality
+# build plots iteratively
 pH_CO2 <- ggplot(data = data_all, 
                  mapping = aes(x = Surface_pH, y = pCO2))
 pH_CO2 +
@@ -109,32 +105,24 @@ ggplot(data = data_all, mapping = aes(x = Landuse, y = pCO2)) +
   geom_jitter(color = "tomato") +
   geom_boxplot(alpha = 0)
 
-# can change axes 
+# can change axes here, too
 ggplot(data = data_all, mapping = aes(x = Landuse, y = pCO2)) + 
   geom_jitter(color = "tomato") +
   geom_boxplot(alpha = 0) +
   scale_y_log10()
 
-# violin 
+# violin plots
 ggplot(data = data_all, mapping = aes(x = Landuse, y = pCO2)) + 
   geom_jitter(color = "tomato") +
   geom_violin(alpha = 0)
 
 ### CHALLENGE ###
-# Make a box plot (with or without points) of pH by year
-ggplot(data_all, aes(Year, Surface_pH)) +
-  geom_jitter(width = 0.1) +
+# Make a box plot (with blue points) of pH by year
+ggplot(data_all, aes(x = Year, y = Surface_pH)) +
+  geom_jitter(width = 0.25, color = "blue") +
   geom_boxplot(alpha = 0)
 ###
 
-
-# very quick demonstration of geom_line
-# not an ideal example but 
-site10 <- data_all %>% 
-  filter(Site_ID %in% c("10A", "10B", "10C", "10D"))
-
-ggplot(data = site10, aes(x = Date, y = Surface_pH)) + 
-  geom_line(aes(color = Site_ID))
 
 # FACETING #
 # splits one plot into multiple panels based on a variable
@@ -168,7 +156,6 @@ ggplot(data_all, aes(x = Surface_pH, y = pCO2)) +
   geom_point() +
   facet_wrap(facets = vars(Landuse)) + 
   theme_bw()
-
 # many others, like theme_minimal, theme_light, theme_void
 
 # adjust labels
@@ -187,6 +174,7 @@ ggplot(data_all, aes(x = Surface_pH, y = pCO2)) +
        x = "pH") +
   theme_bw() +
   theme(text = element_text(size = 16))
+
 # or can be more specific with theme(axis...)
 ggplot(data_all, aes(x = Surface_pH, y = pCO2)) +
   geom_point() +
@@ -195,10 +183,24 @@ ggplot(data_all, aes(x = Surface_pH, y = pCO2)) +
   theme_bw() +
   theme(axis.title = element_text(size = 16))
 
-# can save theme as it's own thing
-my_theme <- theme()
+# can save theme as it's own thing and them add to plots
+my_theme <- theme(axis.title = element_text(size = 16),
+                  text = element_text(face = "bold"))
 
-# go into patchwork? depending on time
+ggplot(data_all, aes(x = Surface_pH, y = pCO2)) +
+  geom_point() +
+  facet_wrap(facets = vars(Landuse)) + 
+  labs(x = "pH") +
+  theme_bw() +
+  my_theme
+
+# PATCHWORK #
+# stitching multiple plots together 
+# one of MANY ways (see cowplot, ggpubr, etc.)
+
+# install.packages("patchwork")
+library(patchwork)
+
 plot1 <- ggplot(data = data_all, mapping = aes(x = Landuse, y = pCO2)) + 
   geom_jitter(color = "tomato") +
   geom_violin(alpha = 0)
@@ -208,9 +210,111 @@ plot2 <- ggplot(data_all, aes(x = Surface_pH, y = pCO2)) +
   facet_wrap(facets = vars(Landuse)) + 
   theme_bw()
 
-library(patchwork)
-
 plot1 + plot2
-plot1 / plot2 + plot_layout(heights = c(3, 1))
+plot1 + plot2 + plot_layout(widths = c(3, 1))
+plot1 / plot2
 
-# ggsave!
+
+# GGSAVE #
+
+ggsave("figures/plot1.png", plot1, width = 7, height = 7)
+ggsave("figures/plot3.png") # will save the latest plot if you don't specify
+
+# ~OTHER STUFF~ #
+
+# geom_line() for line plots (often with time-series data) #
+# very quick demonstration of geom_line
+# not an ideal example but at least you can see what a plot looks like
+site10 <- data_all %>% 
+  # filter the Site_ID column to only pull out these 4 site IDs
+  filter(Site_ID %in% c("10A", "10B", "10C", "10D"))
+
+ggplot(data = site10, aes(x = Date, y = Surface_pH)) + 
+  geom_line(aes(color = Site_ID))
+
+# Legends #
+# adjusting legends can be tricky...
+# here are a few examples (I honestly had to google 2 of them...)
+
+# if we want the legend title to say "Site ID" instead of "Site_ID", we can
+# add the following line of code. Basically, we created the need for a legend by
+# saying that color should vary by Site_ID, so in the labels function, we are 
+# saying that the label for the thing determined by color should be called "Site ID"
+# I often forget this and sometimes just end up renaming the column to what I 
+# want the legend title to be!
+ggplot(data = site10, aes(x = Date, y = Surface_pH)) + 
+  geom_line(aes(color = Site_ID)) +
+  labs(color = "Site ID")
+
+# if you want to change the position of the legend, you do so in theme()
+ggplot(data = site10, aes(x = Date, y = Surface_pH)) + 
+  geom_line(aes(color = Site_ID)) + 
+  theme(legend.position = "bottom")
+
+# if you want to be rid of the legend entirely, set position to "none"
+ggplot(data = site10, aes(x = Date, y = Surface_pH)) + 
+  geom_line(aes(color = Site_ID)) +
+  theme(legend.position = "none")
+
+# to get rid of the legend title only, use element_blank()
+ggplot(data = site10, aes(x = Date, y = Surface_pH)) + 
+  geom_line(aes(color = Site_ID)) +
+  theme(legend.title = element_blank())
+
+# Reordering Data or Panels #
+
+# summarize data to make a bar plot
+(data_summary <- data_all %>% 
+  group_by(Landuse, Year) %>% 
+  summarise(mean_pH = mean(Surface_pH),
+            st.dev_pH = sd(Surface_pH)))
+
+# plot
+ggplot(data_summary, aes(x = Landuse, y = mean_pH, fill = Year)) + # fill means the column colors are determined by year
+  # geom_col (aka column) gives vertical bars; geom_bar gives horizontal
+  geom_col(position = "dodge") + # dodge means the years are next to each other rather than stacked
+  geom_errorbar(aes(ymin = mean_pH - st.dev_pH, ymax = mean_pH + st.dev_pH),
+                width = 0.25,
+                position = position_dodge(0.9))
+  
+# to reorder the columns based on value, you have to reorder the data frame
+# the best way to do with is by changing the levels of your factors
+# I highly recommend reviewing factors here: https://datacarpentry.org/R-ecology-lesson/02-starting-with-data.html
+# You can do this for each level individually or, if you have a bunch, you might
+# want to use arrange/reorder and then reassign the factors
+data_summary$Landuse <- factor(data_summary$Landuse, 
+                               levels = c("Pasture-livestock", "Grassland",
+                                          "Crop", "Domestic"))
+
+ggplot(data_summary, aes(x = Landuse, y = mean_pH, fill = Year)) + 
+  geom_col(position = "dodge") +
+  geom_errorbar(aes(ymin = mean_pH - st.dev_pH, ymax = mean_pH + st.dev_pH),
+                width = 0.25,
+                position = position_dodge(0.9))
+
+# Changing Font Face #
+
+ggplot(data_all, aes(x = Surface_pH, y = pCO2)) +
+  geom_point() +
+  theme_bw()
+
+# if you want the whole label to be a specific font type, you can change that
+# in the theme function
+ggplot(data_all, aes(x = Surface_pH, y = pCO2)) +
+  geom_point() +
+  theme_bw() +
+  theme(axis.title.y = element_text(face = "bold"),
+        axis.title.x = element_text(face = "italic"))
+
+# if you want to change only part of an axis title, you can use expression()
+x_axis_title <- expression(paste("Surface ", bold("pH")))
+y_axis_title <- expression(pCO[2])
+  # use [] for subscript and ^ for superscript
+  # you can put the expression() code directly into the xlab() or ylab() function,
+  # but I like to keep them separate if they are particularly complicated
+
+ggplot(data_all, aes(x = Surface_pH, y = pCO2)) +
+  geom_point() +
+  xlab(x_axis_title) +
+  ylab(y_axis_title) +
+  theme_bw()
