@@ -199,5 +199,18 @@ ggplot(data_all, aes(x = Surface_pH, y = pCO2)) +
 my_theme <- theme()
 
 # go into patchwork? depending on time
+plot1 <- ggplot(data = data_all, mapping = aes(x = Landuse, y = pCO2)) + 
+  geom_jitter(color = "tomato") +
+  geom_violin(alpha = 0)
+
+plot2 <- ggplot(data_all, aes(x = Surface_pH, y = pCO2)) +
+  geom_point() +
+  facet_wrap(facets = vars(Landuse)) + 
+  theme_bw()
+
+library(patchwork)
+
+plot1 + plot2
+plot1 / plot2 + plot_layout(heights = c(3, 1))
 
 # ggsave!
