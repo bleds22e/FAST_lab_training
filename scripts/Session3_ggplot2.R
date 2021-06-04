@@ -183,7 +183,7 @@ ggplot(data_all, aes(x = Surface_pH, y = pCO2)) +
   theme_bw() +
   theme(axis.title = element_text(size = 16))
 
-# can save theme as it's own thing and them add to plots
+# can save theme as its own thing and add to plots
 my_theme <- theme(axis.title = element_text(size = 16),
                   text = element_text(face = "bold"))
 
@@ -213,7 +213,6 @@ plot2 <- ggplot(data_all, aes(x = Surface_pH, y = pCO2)) +
 plot1 + plot2
 plot1 + plot2 + plot_layout(widths = c(3, 1))
 plot1 / plot2
-
 
 # GGSAVE #
 
