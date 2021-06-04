@@ -43,9 +43,17 @@ waterchem2020 <- read.csv("data/water_chem_2020.csv",
 
 # separate carbon_2020 date from name in sample id column 
 carbon2020 <- carbon2020 %>% 
-  separate(col = Sample.ID, into = c("Site_ID", "Date"), 
-           sep = "/", remove = FALSE) %>% 
-  group_by(Site_ID)
+  separate(col = Sample.ID, into = c("Site_ID", "Date"), sep = "/") %>% 
+  add_column(Year = "2020") %>% 
+  # USE str_extract_all(str, "[0-9]+") and str_extract_all(str, "[aA-zZ]+") for Date
+  # THEN ifelse to add 0 in front if only 1 character (str_lenght?)
+  # THEN use unite to bring year, mon, day together with -
+  unite("Date", Year, Day, Month, sep = "") %>% 
+  # THEN lubridate 
+  mutate(Sample = str_sub(Site_ID, 1, 1),  
+         Site_ID = str_sub(Site_ID, 2, nchar(Site_ID)),
+         Date = lubridate::mdy(Date)) %>% 
+  separate(Site_ID, c("Site_ID", "Deep"), sep = "-")
 
 # remove weird name/date combo column in carbon2020
 carbon2020 <- carbon2020[, -(1)]  
