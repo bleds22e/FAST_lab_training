@@ -35,46 +35,55 @@ master2020 <- read_csv("data/dugout_master2020.csv",
 
 ## 2020 ##
 
-# read in TIC TOc and water chem data for 2020
+# read in TIC TOC and water chem data for 2020
 carbon2020 <- read.csv("data/carbon_2020.csv", 
                        na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
 waterchem2020 <- read.csv("data/water_chem_2020.csv", 
                           na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
 
-# separate carbon_2020 date from name in sample id column 
+# prep carbon data for merging 
 carbon2020 <- carbon2020 %>% 
   separate(col = Sample.ID, into = c("Site_ID", "Date"), sep = "/") %>% 
   add_column(Year = "2020") %>% 
-  # USE str_extract_all(str, "[0-9]+") and str_extract_all(str, "[aA-zZ]+") for Date
-  # THEN ifelse to add 0 in front if only 1 character (str_lenght?)
-  # THEN use unite to bring year, mon, day together with -
-  unite("Date", Year, Day, Month, sep = "") %>% 
-  # THEN lubridate 
   mutate(Sample = str_sub(Site_ID, 1, 1),  
          Site_ID = str_sub(Site_ID, 2, nchar(Site_ID)),
-         Date = lubridate::mdy(Date)) %>% 
-  separate(Site_ID, c("Site_ID", "Deep"), sep = "-")
-
-# remove weird name/date combo column in carbon2020
-carbon2020 <- carbon2020[, -(1)]  
-
-# rename columns
-carbon2020 <- carbon2020 %>% 
-  select(Site_ID, Date, TIC_PPM_mg.L.C = TIC..PPM.as.mg.L.C., 
+         Month = str_extract(Date, "[aA-zZ]+"), # pull out letters from Date
+         Day = str_extract(Date, "[0-9]+")) %>% # pull out numbers from Date
+  # if Day has only 1 character, add a 0 in front so lubridate understands
+  mutate(Day = ifelse(str_length(Day) == 1, paste0("0", Day), Day)) %>% 
+  unite("Date", Year, Day, Month, sep = "-") %>% 
+  mutate(Date = lubridate::ydm(Date)) %>% 
+  # make a new column to indicate if samples were labeled "deep"
+  separate(Site_ID, c("Site_ID", "Deep"), sep = "-") %>% 
+  rename(TIC_PPM_mg.L.C = TIC..PPM.as.mg.L.C., 
          TOC_PPM_mg.L.C = TOC..PPM.as.mg.L.C.)
 
-# remove weird x NA columns in waterchem2020
-waterchem2020 <- waterchem2020[-(49:107), -(7:10)]
-
-# rename columns
+# prep waterchem data
 waterchem2020 <- waterchem2020 %>% 
-  select(Site_ID = Sample, TN_ug.N.L = TN..ug.N.L., TP_mg.P.L = TP..mg.P.L., 
-         Ammonia_mg.NH3.N.L = Ammonia..mg.NH3.N.L., SRP_mg.P.L = SRP..mg.P.L., 
+  select(Sample:Nitrate.Nitrite..ug.N.L.) %>% 
+  drop_na() %>% 
+  mutate(Site_ID = str_sub(Sample, 2, nchar(Sample)),
+         Sample = str_sub(Sample, 1, 1)) %>% 
+  separate(Site_ID, c("Site_ID", "Deep"), sep = "-") %>% 
+  rename(TN_ug.N.L = TN..ug.N.L., TP_mg.P.L = TP..mg.P.L., 
+         NH3_mg.N.L = Ammonia..mg.NH3.N.L., SRP_mg.P.L = SRP..mg.P.L., 
          Nitrate_Nitrite_ug.N.L = Nitrate.Nitrite..ug.N.L.)
 
-# join waterchem2020 to master2020 (?)
-master2020 <- master2020 %>% 
-  full_join(waterchem2020, by = "Site_ID")  
+# join waterchem2020 to carbon2020
+carbon_waterchem2020 <- full_join(carbon2020, waterchem2020) %>% 
+  select(-Sample) %>% 
+  arrange(Site_ID, Date)
+
+# differences between waterchem/carbon & master2020 files
+diff1 <- setdiff(carbon_waterchem2020[,c(1,5)], 
+                 select(master2020, Site_ID, Date) %>% 
+                   mutate(Date = lubridate::dmy(Date)))
+
+diff2 <- setdiff(select(master2020, Site_ID, Date) %>% 
+                   mutate(Date = lubridate::dmy(Date)),
+                 carbon_waterchem2020[,c(1,5)])
+  
+## 2017 ##
 
 # read in chl total data from 2017
 chl_total2017 <- read.csv("data/chl_total_2017.csv", 
