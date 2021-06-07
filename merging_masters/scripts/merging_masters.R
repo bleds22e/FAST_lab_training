@@ -239,6 +239,12 @@ diff2 <- setdiff(select(master2020, Site_ID, Date) %>%
 chl_total2017 <- read.csv("data/chl_2017.csv", 
                           na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
 
+# average values per sample
+chl_total2017[204, 2] <- "27B"
+chl_total2017 <- chl_total2017 %>% 
+  group_by(Site_ID) %>% 
+  summarise(across(ChlA.ug.L:ChlTotal.ug.L, mean))
+
 # join 2017 chl total with master2017 (?)
 # chl data has 2 runs per sample? do we average them? even so, 2 extra samples?
 master2017 <- master2017 %>%
