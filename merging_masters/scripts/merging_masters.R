@@ -31,73 +31,6 @@ master2019 <- read_csv("data/dugout_master2019.csv",
 master2020 <- read_csv("data/dugout_master2020.csv",
                        na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
 
-# ADDING IN DATA ####
-
-## 2020 ##
-
-# read in TIC TOC and water chem data for 2020
-carbon2020 <- read.csv("data/carbon_2020.csv", 
-                       na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
-waterchem2020 <- read.csv("data/water_chem_2020.csv", 
-                          na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
-
-# prep carbon data for merging 
-carbon2020 <- carbon2020 %>% 
-  separate(col = Sample.ID, into = c("Site_ID", "Date"), sep = "/") %>% 
-  add_column(Year = "2020") %>% 
-  mutate(Sample = str_sub(Site_ID, 1, 1),  
-         Site_ID = str_sub(Site_ID, 2, nchar(Site_ID)),
-         Month = str_extract(Date, "[aA-zZ]+"), # pull out letters from Date
-         Day = str_extract(Date, "[0-9]+")) %>% # pull out numbers from Date
-  # if Day has only 1 character, add a 0 in front so lubridate understands
-  mutate(Day = ifelse(str_length(Day) == 1, paste0("0", Day), Day)) %>% 
-  unite("Date", Year, Day, Month, sep = "-") %>% 
-  mutate(Date = lubridate::ydm(Date)) %>% 
-  # make a new column to indicate if samples were labeled "deep"
-  separate(Site_ID, c("Site_ID", "Deep"), sep = "-") %>% 
-  rename(TIC_PPM_mg.L.C = TIC..PPM.as.mg.L.C., 
-         TOC_PPM_mg.L.C = TOC..PPM.as.mg.L.C.)
-
-# prep waterchem data
-waterchem2020 <- waterchem2020 %>% 
-  select(Sample:Nitrate.Nitrite..ug.N.L.) %>% 
-  drop_na() %>% 
-  mutate(Site_ID = str_sub(Sample, 2, nchar(Sample)),
-         Sample = str_sub(Sample, 1, 1)) %>% 
-  separate(Site_ID, c("Site_ID", "Deep"), sep = "-") %>% 
-  rename(TN_ug.N.L = TN..ug.N.L., TP_mg.P.L = TP..mg.P.L., 
-         NH3_mg.N.L = Ammonia..mg.NH3.N.L., SRP_mg.P.L = SRP..mg.P.L., 
-         Nitrate_Nitrite_ug.N.L = Nitrate.Nitrite..ug.N.L.)
-
-# join waterchem2020 to carbon2020
-carbon_waterchem2020 <- full_join(carbon2020, waterchem2020) %>% 
-  select(-Sample) %>% 
-  arrange(Site_ID, Date)
-
-# differences between waterchem/carbon & master2020 files
-diff1 <- setdiff(carbon_waterchem2020[,c(1,5)], 
-                 select(master2020, Site_ID, Date) %>% 
-                   mutate(Date = lubridate::dmy(Date)))
-
-diff2 <- setdiff(select(master2020, Site_ID, Date) %>% 
-                   mutate(Date = lubridate::dmy(Date)),
-                 carbon_waterchem2020[,c(1,5)])
-  
-## 2017 ##
-
-# read in chl total data from 2017
-chl_total2017 <- read.csv("data/chl_total_2017.csv", 
-                          na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
-
-## 2017 ## 
-
-#join 2017 chl total with master2017 (?)
-master2017 <- master2017 %>% 
-  full_join(select(chl_total2017, Site_ID, Chla = ChlA.ug.L, 
-                   Chlb = ChlB.ug.L, Chlc = ChlC.ug.L, 
-                   Chl_total = ChlTotal.ug.L), by = "Site_ID")
-
-
 # MAKE COLUMNS MATCH ####
 
 # 2017 data
@@ -245,6 +178,75 @@ master2020 <- master2020 %>%
          Bottle2_temp_out = `Shakey Bottle 2 temp out`, Tows, Floating_chamber:General_comments) %>% 
   mutate(Date = lubridate::dmy(Date))
 
+# ADDING IN DATA ####
+
+## 2020 ##
+
+# read in TIC TOC and water chem data for 2020
+carbon2020 <- read.csv("data/carbon_2020.csv", 
+                       na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
+waterchem2020 <- read.csv("data/water_chem_2020.csv", 
+                          na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
+
+# prep carbon data for merging 
+carbon2020 <- carbon2020 %>% 
+  separate(col = Sample.ID, into = c("Site_ID", "Date"), sep = "/") %>% 
+  add_column(Year = "2020") %>% 
+  mutate(Sample = str_sub(Site_ID, 1, 1),  
+         Site_ID = str_sub(Site_ID, 2, nchar(Site_ID)),
+         Month = str_extract(Date, "[aA-zZ]+"), # pull out letters from Date
+         Day = str_extract(Date, "[0-9]+")) %>% # pull out numbers from Date
+  # if Day has only 1 character, add a 0 in front so lubridate understands
+  mutate(Day = ifelse(str_length(Day) == 1, paste0("0", Day), Day)) %>% 
+  unite("Date", Year, Day, Month, sep = "-") %>% 
+  mutate(Date = lubridate::ydm(Date)) %>% 
+  # make a new column to indicate if samples were labeled "deep"
+  separate(Site_ID, c("Site_ID", "Deep"), sep = "-") %>% 
+  rename(TIC_PPM_mg.L.C = TIC..PPM.as.mg.L.C., 
+         TOC_PPM_mg.L.C = TOC..PPM.as.mg.L.C.)
+
+# prep waterchem data
+waterchem2020 <- waterchem2020 %>% 
+  select(Sample:Nitrate.Nitrite..ug.N.L.) %>% 
+  drop_na() %>% 
+  mutate(Site_ID = str_sub(Sample, 2, nchar(Sample)),
+         Sample = str_sub(Sample, 1, 1)) %>% 
+  separate(Site_ID, c("Site_ID", "Deep"), sep = "-") %>% 
+  rename(TN_ug.N.L = TN..ug.N.L., TP_mg.P.L = TP..mg.P.L., 
+         NH3_mg.N.L = Ammonia..mg.NH3.N.L., SRP_mg.P.L = SRP..mg.P.L., 
+         Nitrate_Nitrite_ug.N.L = Nitrate.Nitrite..ug.N.L.)
+
+# join waterchem2020 to carbon2020
+carbon_waterchem2020 <- full_join(carbon2020, waterchem2020) %>% 
+  select(-Sample) %>% 
+  arrange(Site_ID, Date)
+
+# differences between waterchem/carbon & master2020 files
+diff1 <- setdiff(carbon_waterchem2020[,c(1,5)], 
+                 select(master2020, Site_ID, Date) %>% 
+                   mutate(Date = lubridate::dmy(Date)))
+
+diff2 <- setdiff(select(master2020, Site_ID, Date) %>% 
+                   mutate(Date = lubridate::dmy(Date)),
+                 carbon_waterchem2020[,c(1,5)])
+
+# need to merge 2020 data #
+
+
+## 2017 ##
+
+# read in chl total data from 2017
+chl_total2017 <- read.csv("data/chl_2017.csv", 
+                          na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
+
+# join 2017 chl total with master2017 (?)
+# chl data has 2 runs per sample? do we average them? even so, 2 extra samples?
+master2017 <- master2017 %>%
+  full_join(., select(chl_total2017, Site_ID, Chla = ChlA.ug.L,
+                      Chl_total = ChlTotal.ug.L), by = c("Site_ID"))
+
+
+
 # MATCH COLUMN TYPES ####
 
 # only chr columns should be Site_ID, Field_team, Floating_chamber, Regime, 
@@ -289,16 +291,14 @@ master2020 <- master2020 %>%
   mutate(Time = strptime(.$Time, format = "%H:%M")) %>% # converts to POSIXlt
   mutate(Time = hms::as_hms(Time)) # gets rid of date part
 
+## Also need to calculate 10% LOD for 2017 data ##
+
+## Can then use mutate to calculate DIN and TN_TP ##
+
+## Need to bind_rows to finish ##
+
 # WORK AREA #===================================================================
 
 # DIN_ug.N.L = (NH3_mg.N.L*1000)+Nitrate_Nitrite_ug.N.L
 # TN_TP = (TN.ug.N.L/1000) / TP.mg.P.L
 
-time_check <- bind_rows(select(master2017, Time), 
-                        select(master2018, Time),
-                        select(master2019, Time))
-
-Date_check <- bind_rows(select(master2017, Date), 
-                        select(master2018, Date),
-                        select(master2019, Date), 
-                        select(master2020, Date))
