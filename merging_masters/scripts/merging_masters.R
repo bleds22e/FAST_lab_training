@@ -1,10 +1,14 @@
-# MERGE MASTER FILES 2017-2020 #### 
-
+###################################
+#   MERGE MASTER FILES 2017-2020  # 
+# Jess Lerminiaux & Ellen Bledsoe #
+#          Summer 2021            #
+###################################
+ 
 library(tidyverse)
 library(hms)
 library(stringr)
 
-# DATA ####
+# DATA #------------------------------------------------------------------------
 
 # 2017 data
 master2017 <- read_csv("data/dugout_master2017.csv",
@@ -31,7 +35,11 @@ master2019 <- read_csv("data/dugout_master2019.csv",
 master2020 <- read_csv("data/dugout_master2020.csv",
                        na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
 
-# MAKE COLUMNS MATCH ####
+# MAKE COLUMNS MATCH #----------------------------------------------------------
+
+# Column naming general format:
+# first word uppercase, subsequent words lowercase, separated by _
+# . is used to separate components of units with more than one component 
 
 # 2017 data
 master2017 <- master2017 %>% 
@@ -42,8 +50,6 @@ master2017 <- master2017 %>%
              PercentN_bulk_POM = NA, PercentC_bulk_POM = NA, C_N_POM = NA,
              Rn_dpm.L = NA, Elevation_m = NA) %>%
   # order columns and rename all the columns with standard format
-  # first word uppercase, subsequent words lowercase, separated by _
-  # . is used to separate components of units with more than one component 
   select(Site_ID, Date, Time, Latitude = latitude, Longitude = longitude, Air_temp, 
          Cloud_perc = `Cloud (%)`, Wind_km.hr, Field_team, Secchi_m = Secchi.m, 
          Depth_m = Depth.m, Max_depth_m = Max_depth.m,
@@ -178,11 +184,11 @@ master2020 <- master2020 %>%
          Bottle2_temp_out = `Shakey Bottle 2 temp out`, Tows, Floating_chamber:General_comments) %>% 
   mutate(Date = lubridate::dmy(Date))
 
-# ADDING IN DATA ####
+# ADDING IN DATA #--------------------------------------------------------------
 
 ## 2020 ##
 
-# read in TIC TOC and water chem data for 2020
+# read in DIC, DOC, and water chem data for 2020
 carbon2020 <- read.csv("data/carbon_2020.csv", 
                        na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
 waterchem2020 <- read.csv("data/water_chem_2020.csv", 
@@ -201,34 +207,48 @@ carbon2020 <- carbon2020 %>%
   unite("Date", Year, Day, Month, sep = "-") %>% 
   mutate(Date = lubridate::ydm(Date)) %>% 
   # make a new column to indicate if samples were labeled "deep"
-  separate(Site_ID, c("Site_ID", "Deep"), sep = "-") %>% 
-  rename(TIC_PPM_mg.L.C = TIC..PPM.as.mg.L.C., 
-         TOC_PPM_mg.L.C = TOC..PPM.as.mg.L.C.)
+  separate(Site_ID, c("Site_ID", "Deep"), sep = "-")
 
 # prep waterchem data
 waterchem2020 <- waterchem2020 %>% 
   select(Sample:Nitrate.Nitrite..ug.N.L.) %>% 
   drop_na() %>% 
   mutate(Site_ID = str_sub(Sample, 2, nchar(Sample)),
-         Sample = str_sub(Sample, 1, 1)) %>% 
-  separate(Site_ID, c("Site_ID", "Deep"), sep = "-") %>% 
-  rename(TN_ug.N.L = TN..ug.N.L., TP_mg.P.L = TP..mg.P.L., 
-         NH3_mg.N.L = Ammonia..mg.NH3.N.L., SRP_mg.P.L = SRP..mg.P.L., 
-         Nitrate_Nitrite_ug.N.L = Nitrate.Nitrite..ug.N.L.)
+         Sample = str_sub(Sample, 1, 1),
+         Site_ID = replace(Site_ID, Site_ID == '57C', '56C')) %>% 
+  separate(Site_ID, c("Site_ID", "Deep"), sep = "-")
 
 # join waterchem2020 to carbon2020
 carbon_waterchem2020 <- full_join(carbon2020, waterchem2020) %>% 
-  select(-Sample) %>% 
-  arrange(Site_ID, Date)
+  select(-Sample) 
+
+rename(DIC_mg.L = TIC..PPM.as.mg.L.C., DOC_mg.L = TOC..PPM.as.mg.L.C., 
+       TN_ug.N.L = TN..ug.N.L., TP_mg.P.L = TP..mg.P.L., 
+       NH3_mg.N.L = Ammonia..mg.NH3.N.L., SRP_mg.P.L = SRP..mg.P.L., 
+       Nitrate_Nitrite_ug.N.L = Nitrate.Nitrite..ug.N.L.)
 
 # differences between waterchem/carbon & master2020 files
-diff1 <- setdiff(carbon_waterchem2020[,c(1,5)], 
-                 select(master2020, Site_ID, Date) %>% 
-                   mutate(Date = lubridate::dmy(Date)))
+# Site_ID and Date columns
+# diff1 <- setdiff(select(carbon_waterchem2020, Site_ID, Date), 
+#                  select(master2020, Site_ID, Date))
+# 
+# diff2 <- setdiff(select(master2020, Site_ID, Date),
+#                  select(carbon_waterchem2020, Site_ID, Date))
 
-diff2 <- setdiff(select(master2020, Site_ID, Date) %>% 
-                   mutate(Date = lubridate::dmy(Date)),
-                 carbon_waterchem2020[,c(1,5)])
+# fix differences in dates according to Ryan's corrections
+carbon_waterchem2020 <- carbon_waterchem2020 %>% 
+  mutate(Date = replace(Date, Site_ID == '56A' & Date == "2020-06-02", "2020-06-03"),
+         Date = replace(Date, Site_ID == '56C' & Date == "2020-06-02", "2020-06-03"),
+         Date = replace(Date, Site_ID == 'LA2' & Date == "2020-07-22", "2020-07-02"),
+         Site_ID = replace(Site_ID, Site_ID == 'LB1', 'CB1'))
+
+master2020 <- master2020 %>% 
+  mutate(Date = replace(Date, Site_ID == '56A' & Date == "2020-06-20", "2020-06-30"),
+         Date = replace(Date, Site_ID == 'LH' & Date == "2020-07-03", "2020-07-07"),
+         Date = replace(Date, Site_ID == 'LS' & Date == "2020-07-03", "2020-07-07"),
+         Date = replace(Date, Site_ID == '14B' & Date == "2020-07-20", "2020-07-30"),
+         Date = replace(Date, Site_ID == '14A' & Date == "2020-08-16", "2020-08-17"),
+         Date = replace(Date, Site_ID == '56A' & Date == "2020-08-16", "2020-08-17"))
 
 # need to merge 2020 data #
 
@@ -253,7 +273,7 @@ master2017 <- master2017 %>%
 
 
 
-# MATCH COLUMN TYPES ####
+# MATCH COLUMN TYPES #----------------------------------------------------------
 
 # only chr columns should be Site_ID, Field_team, Floating_chamber, Regime, 
 # Water_source, Water_class, and Land_use #
