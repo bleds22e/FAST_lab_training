@@ -41,6 +41,14 @@ master2020 <- read_csv("data/dugout_master2020.csv",
 # first word uppercase, subsequent words lowercase, separated by _
 # . is used to separate components of units with more than one component 
 
+
+### NOTE! ###
+# Based on 2020 and 2021 data, the following columns need surface and deep:
+# DIC, DOC, TN, TP, NH3, SRP, Nitrate_Nitrite
+# Need to change all years before proceeding
+# 2017-2019, all values already in those columns will go in the "Surface" cols
+
+
 # 2017 data
 master2017 <- master2017 %>% 
   # add columns that are in the 2018 or 2019 data but not 2017
@@ -222,10 +230,27 @@ waterchem2020 <- waterchem2020 %>%
 carbon_waterchem2020 <- full_join(carbon2020, waterchem2020) %>% 
   select(-Sample) 
 
-rename(DIC_mg.L = TIC..PPM.as.mg.L.C., DOC_mg.L = TOC..PPM.as.mg.L.C., 
-       TN_ug.N.L = TN..ug.N.L., TP_mg.P.L = TP..mg.P.L., 
-       NH3_mg.N.L = Ammonia..mg.NH3.N.L., SRP_mg.P.L = SRP..mg.P.L., 
-       Nitrate_Nitrite_ug.N.L = Nitrate.Nitrite..ug.N.L.)
+# make deep and surface dfs and rejoin
+# separate "deep" values
+carbon_water_deep <- carbon_waterchem2020 %>% 
+  filter(!is.na(Deep)) %>% 
+  rename(Deep_DIC_mg.L = TIC..PPM.as.mg.L.C., 
+         Deep_DOC_mg.L = TOC..PPM.as.mg.L.C., 
+         Deep_TN_ug.N.L = TN..ug.N.L., Deep_TP_mg.P.L = TP..mg.P.L., 
+         Deep_NH3_mg.N.L = Ammonia..mg.NH3.N.L., Deep_SRP_mg.P.L = SRP..mg.P.L., 
+         Deep_Nitrate_Nitrite_ug.N.L = Nitrate.Nitrite..ug.N.L.) %>% 
+  select(-Deep)
+
+carbon_water_surface <- carbon_waterchem2020 %>% 
+  filter(is.na(Deep)) %>% 
+  rename(Surface_DIC_mg.L = TIC..PPM.as.mg.L.C., 
+         Surface_DOC_mg.L = TOC..PPM.as.mg.L.C., Surface_TN_ug.N.L = 
+         TN..ug.N.L., Surface_TP_mg.P.L = TP..mg.P.L., Surface_NH3_mg.N.L = 
+         Ammonia..mg.NH3.N.L., Surface_SRP_mg.P.L = SRP..mg.P.L., 
+         Surface_Nitrate_Nitrite_ug.N.L = Nitrate.Nitrite..ug.N.L.) %>% 
+  select(-Deep)
+
+carbon_waterchem2020 <- full_join(carbon_water_surface, carbon_water_deep)
 
 # differences between waterchem/carbon & master2020 files
 # Site_ID and Date columns
@@ -251,7 +276,7 @@ master2020 <- master2020 %>%
          Date = replace(Date, Site_ID == '56A' & Date == "2020-08-16", "2020-08-17"))
 
 # need to merge 2020 data #
-
+master2020 <- full_join(master2020, carbon_waterchem2020)
 
 ## 2017 ##
 
@@ -260,13 +285,14 @@ chl_total2017 <- read.csv("data/chl_2017.csv",
                           na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
 
 # average values per sample
-chl_total2017[204, 2] <- "27B"
 chl_total2017 <- chl_total2017 %>% 
   group_by(Site_ID) %>% 
-  summarise(across(ChlA.ug.L:ChlTotal.ug.L, mean))
+  arrange(Site_ID) %>% 
+  summarise(across(ChlA.ug.L:ChlTotal.ug.L, mean)) %>% 
+  filter(Site_ID != '54A?')
+# 22B, 27B; 54A?, 59A
 
 # join 2017 chl total with master2017 (?)
-# chl data has 2 runs per sample? do we average them? even so, 2 extra samples?
 master2017 <- master2017 %>%
   full_join(., select(chl_total2017, Site_ID, Chla = ChlA.ug.L,
                       Chl_total = ChlTotal.ug.L), by = c("Site_ID"))
