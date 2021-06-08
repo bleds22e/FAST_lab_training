@@ -297,6 +297,7 @@ master2017 <- master2017 %>%
   full_join(., select(chl_total2017, Site_ID, Chla = ChlA.ug.L,
                       Chl_total = ChlTotal.ug.L), by = c("Site_ID"))
 
+# still need to deal with this!
 
 
 # MATCH COLUMN TYPES #----------------------------------------------------------
