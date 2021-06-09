@@ -3,7 +3,7 @@
 # Jess Lerminiaux & Ellen Bledsoe #
 #          Summer 2021            #
 ###################################
- 
+
 library(tidyverse)
 library(hms)
 library(stringr)
@@ -53,10 +53,13 @@ master2020 <- read_csv("data/dugout_master2020.csv",
 master2017 <- master2017 %>% 
   # add columns that are in the 2018 or 2019 data but not 2017
   add_column(Bottle2_temp_in = NA, Bottle2_temp_out = NA,
-             Chl_total = NA, DIN_ug.N.L = NA, MC_ug.L = NA, d15N_bulk_POM = NA,
-             d13C_bulk_POM = NA, ugN_bulk_POM = NA, ugC_bulk_POM = NA, 
-             PercentN_bulk_POM = NA, PercentC_bulk_POM = NA, C_N_POM = NA,
-             Rn_dpm.L = NA, Elevation_m = NA) %>%
+             Chl_total = NA, Deep_NH3_mg.N.L = NA, Deep_SRP_mg.P.L = NA, 
+             Deep_Nitrate_Nitrite_ug.N.L = NA, DIN_ug.N.L = NA, 
+             Deep_TP_mg.P.L = NA, Deep_TN_ug.N.L = NA, Deep_DIC_mg.L = NA, 
+             Deep_DIC_uM = NA, Deep_DOC_mg.L = NA, Deep_DOC_uM = NA, MC_ug.L = NA, 
+             d15N_bulk_POM = NA, d13C_bulk_POM = NA, ugN_bulk_POM = NA, 
+             ugC_bulk_POM = NA, PercentN_bulk_POM = NA, PercentC_bulk_POM = NA, 
+             C_N_POM = NA, Rn_dpm.L = NA, Elevation_m = NA) %>%
   # order columns and rename all the columns with standard format
   select(Site_ID, Date, Time, Latitude = latitude, Longitude = longitude, Air_temp, 
          Cloud_perc = `Cloud (%)`, Wind_km.hr, Field_team, Secchi_m = Secchi.m, 
@@ -66,17 +69,21 @@ master2017 <- master2017 %>%
          Surface_cond = Surface_Cond, Surface_sal_ppt = Surface_Sal.ppt, 
          Surface_pH, Deep_temp = Deep_Temp, Deep_DO_sat = Deep_DO.sat, 
          Deep_DO_mg.L = Deep_DO.mg.L, Deep_cond = Deep_Cond, Deep_sal_ppt = 
-         Deep_Sal.ppt, Deep_pH, TDS_mg.L = TDS.mg.L, YSI_atm, Core_length_cm = 
-         `Core_length (cm)`, Sediment_depth, Bottle_temp_in = Bottle_Temp_In, 
+           Deep_Sal.ppt, Deep_pH, TDS_mg.L = TDS.mg.L, YSI_atm, Core_length_cm = 
+           `Core_length (cm)`, Sediment_depth, Bottle_temp_in = Bottle_Temp_In, 
          Bottle_temp_out, Bottle2_temp_in, Bottle2_temp_out, 
          Tows, Floating_chamber = `Floating_chamberY/N`, Chl_total,
-         Chla, NH3_mg.N.L = NH3.mg.N.L, SRP_mg.P.L = SRP.mg.P.L, 
-         Nitrate_Nitrite_ug.N.L = Nitrate_Nitrite.ug.N.L, DIN_ug.N.L, TP_mg.P.L = 
-         TP.mg.P.L, TN_ug.N.L = TN.ug.N.L, NP_ratio, TN_TP, DIC_mg.L = DIC.mg.L, 
-         DIC_uM = DIC.uM, DOC_mg.L = DOC.mg.L, DOC_uM = DOC.uM, SO4_mg.L = 
-         SO4.mg.L, Alk_mg.L = Alk.mg.L, MC_ug.L, pCO2, CO2_uM = CO2.uM, 
+         Chla, Surface_NH3_mg.N.L = NH3.mg.N.L, Deep_NH3_mg.N.L, 
+         Surface_SRP_mg.P.L = SRP.mg.P.L, Deep_SRP_mg.P.L,
+         Surface_Nitrate_Nitrite_ug.N.L = Nitrate_Nitrite.ug.N.L, 
+         Deep_Nitrate_Nitrite_ug.N.L, DIN_ug.N.L, Surface_TP_mg.P.L = TP.mg.P.L, 
+         Deep_TP_mg.P.L, Surface_TN_ug.N.L = TN.ug.N.L, Deep_TN_ug.N.L, NP_ratio, 
+         TN_TP, Surface_DIC_mg.L = DIC.mg.L, Deep_DIC_mg.L, Surface_DIC_uM = DIC.uM, 
+         Deep_DIC_uM, Surface_DOC_mg.L = DOC.mg.L, Deep_DOC_mg.L, 
+         Surface_DOC_uM = DOC.uM, Deep_DOC_uM,
+         SO4_mg.L = SO4.mg.L, Alk_mg.L = Alk.mg.L, MC_ug.L, pCO2, CO2_uM = CO2.uM, 
          CO2_uM_error = CO2.uM.error, pCH4, CH4_uM = CH4.uM, CH4_uM_error = 
-         CH4.uM.error, pN2O, N2O_nM = N2O.nM, N2O_nM_error = N2O.nM.error, 
+           CH4.uM.error, pN2O, N2O_nM = N2O.nM, N2O_nM_error = N2O.nM.error, 
          d15N_bulk:PercentC_bulk, Sediment_C_N = sediment_C_N, d15N_org:PercentC_org, 
          Sediment_C_N_org = `sediment_C_Norg`, d15N_bulk_POM:C_N_POM,
          d2H:Regime, Water_source = Water_Source, Residence_time = RT, 
@@ -86,15 +93,18 @@ master2017 <- master2017 %>%
          General_comments = `General Comments`) %>% 
   # calculate the columns missing columns that we can
   mutate(Date = lubridate::dmy(Date))
-  # mutate(DIN_ug.N.L = (NH3_mg.N.L*1000) + Nitrate_Nitrite_ug.N.L)
-  #   - mutate function not working because Nitrate_Nitrite_ug.N.L column is a 
-  #     character column due to "<LOD" values
-  
+# mutate(DIN_ug.N.L = (NH3_mg.N.L*1000) + Nitrate_Nitrite_ug.N.L)
+#   - mutate function not working because Nitrate_Nitrite_ug.N.L column is a 
+#     character column due to "<LOD" values
+
 # 2018 data  
 master2018 <- master2018 %>% 
   add_column(Core_length_cm = NA, Sediment_depth = NA, Bottle_temp_in = NA, 
              Bottle_temp_out = NA, Bottle2_temp_in = NA, Bottle2_temp_out = NA, 
-             Tows = NA, Floating_chamber = NA, TN_TP = NA, SO4_mg.L =  NA, Alk_mg.L = NA, 
+             Tows = NA, Floating_chamber = NA, Deep_NH3_mg.N.L = NA, Deep_SRP_mg.P.L = NA, 
+             Deep_Nitrate_Nitrite_ug.N.L = NA, Deep_TP_mg.P.L = NA, Deep_TN_ug.N.L = NA,
+             TN_TP = NA, Deep_DIC_mg.L = NA, Deep_DIC_uM = NA, Deep_DOC_mg.L = NA, 
+             Deep_DOC_uM = NA, SO4_mg.L =  NA, Alk_mg.L = NA, 
              d15N_bulk = NA, d13C_bulk = NA, mgN_bullk = NA, mgC_bulk = NA,
              PercentN_bulk = NA, PercentC_bulk = NA, Sediment_C_N = NA, 
              d15N_org = NA, d13_org = NA, mgN_org = NA, mgC_org = NA, PercentN_org = NA, 
@@ -111,10 +121,14 @@ master2018 <- master2018 %>%
          Deep_cond = Deep_Cond, Deep_sal_ppt = Deep_Sal.ppt, Deep_pH, 
          TDS_mg.L = TDS.mg.L, YSI_atm, Core_length_cm, Sediment_depth, Bottle_temp_in, 
          Bottle_temp_out, Bottle2_temp_in, Bottle2_temp_out, Tows, Floating_chamber, 
-         Chl_total, Chla, NH3_mg.N.L = NH3.mg.N.L, SRP_mg.P.L = SRP.mg.P.L, 
-         Nitrate_Nitrite_ug.N.L = Nitrate_Nitrite.ug.N.L, DIN_ug.N.L = DIN.ug.N.L, 
-         TP_mg.P.L = TP.mg.P.L, TN_ug.N.L = TN.ug.N.L, NP_ratio, TN_TP, DIC_mg.L = DIC.mg.L, 
-         DIC_uM = DIC.uM, DOC_mg.L = DOC.mg.L, DOC_uM = DOC.uM, SO4_mg.L, Alk_mg.L, 
+         Chl_total, Chla, Surface_NH3_mg.N.L = NH3.mg.N.L, Deep_NH3_mg.N.L, 
+         Surface_SRP_mg.P.L = SRP.mg.P.L, Deep_SRP_mg.P.L,
+         Surface_Nitrate_Nitrite_ug.N.L = Nitrate_Nitrite.ug.N.L, 
+         Deep_Nitrate_Nitrite_ug.N.L, DIN_ug.N.L = DIN.ug.N.L, 
+         Surface_TP_mg.P.L = TP.mg.P.L, Deep_TP_mg.P.L, Surface_TN_ug.N.L = TN.ug.N.L, 
+         Deep_TN_ug.N.L, NP_ratio, TN_TP, Surface_DIC_mg.L = DIC.mg.L, Deep_DIC_mg.L,
+         Surface_DIC_uM = DIC.uM, Deep_DIC_uM, Surface_DOC_mg.L = DOC.mg.L, 
+         Deep_DOC_mg.L, Surface_DOC_uM = DOC.uM, Deep_DOC_uM, SO4_mg.L, Alk_mg.L, 
          MC_ug.L = MC.ug.L, pCO2, CO2_uM = CO2.uM, CO2_uM_error = CO2.uM.error, 
          pCH4, CH4_uM = CH4.uM, CH4_uM_error = CH4.uM.error, pN2O, N2O_nM = N2O.nM, 
          N2O_nM_error = N2O.nM.error, d15N_bulk, d13C_bulk, mgN_bullk, mgC_bulk,
@@ -129,7 +143,10 @@ master2018 <- master2018 %>%
 
 # 2019 data
 master2019 <- master2019 %>% 
-  add_column(Bottle2_temp_in = NA, Bottle2_temp_out = NA, DIN_ug.N.L = NA, TN_TP = NA,
+  add_column(Bottle2_temp_in = NA, Bottle2_temp_out = NA, Deep_NH3_mg.N.L = NA, 
+             Deep_SRP_mg.P.L = NA, Deep_Nitrate_Nitrite_ug.N.L = NA, DIN_ug.N.L = NA, 
+             Deep_TP_mg.P.L = NA, Deep_TN_ug.N.L = NA, TN_TP = NA,
+             Deep_DIC_mg.L = NA, Deep_DIC_uM = NA, Deep_DOC_mg.L = NA, Deep_DOC_uM = NA, 
              SO4_mg.L = NA, Alk_mg.L = NA, MC_ug.L = NA, Sediment_C_N_org = NA, 
              d15N_bulk_POM = NA, d13C_bulk_POM = NA, ugN_bulk_POM = NA, ugC_bulk_POM = NA, 
              PercentN_bulk_POM = NA, PercentC_bulk_POM = NA, C_N_POM = NA, d_excess = NA, 
@@ -145,11 +162,15 @@ master2019 <- master2019 %>%
          Deep_cond = Deep_Cond, Deep_sal_ppt = Deep_Sal.ppt, Deep_pH, TDS_mg.L = 
            TDS.mg.L, YSI_atm, Core_length_cm = `Core_length (cm)`, Sediment_depth, 
          Bottle_temp_in = Bottle_Temp_In, Bottle_temp_out, Bottle2_temp_in, Bottle2_temp_out, Tows, 
-         Floating_chamber = `Floating_chamberY/N`, Chl_total,Chla, NH3_mg.N.L = NH3.mg.N.L, 
-         SRP_mg.P.L = SRP.mg.P.L, Nitrate_Nitrite_ug.N.L = Nitrate_Nitrite.ug.N.L, 
-         DIN_ug.N.L, TP_mg.P.L = TP.mg.P.L, TN_ug.N.L = TN.ug.N.L, NP_ratio, TN_TP, 
-         DIC_mg.L = DIC.mg.L, DIC_uM = DIC.uM, DOC_mg.L = DOC.mg.L, DOC_uM = DOC.uM,
-         SO4_mg.L, Alk_mg.L, MC_ug.L, pCO2, CO2_uM = CO2.uM, CO2_uM_error = CO2.uM.error, 
+         Floating_chamber = `Floating_chamberY/N`, Chl_total,Chla, 
+         Surface_NH3_mg.N.L = NH3.mg.N.L, Deep_NH3_mg.N.L, Surface_SRP_mg.P.L = SRP.mg.P.L,
+         Deep_SRP_mg.P.L, Surface_Nitrate_Nitrite_ug.N.L = Nitrate_Nitrite.ug.N.L, 
+         Deep_Nitrate_Nitrite_ug.N.L, DIN_ug.N.L, Surface_TP_mg.P.L = TP.mg.P.L, 
+         Deep_TP_mg.P.L, Surface_TN_ug.N.L = TN.ug.N.L, Deep_TN_ug.N.L, 
+         NP_ratio, TN_TP, Surface_DIC_mg.L = DIC.mg.L, Deep_DIC_mg.L, 
+         Surface_DIC_uM = DIC.uM, Deep_DIC_uM, Surface_DOC_mg.L = DOC.mg.L, 
+         Deep_DOC_mg.L, Surface_DOC_uM = DOC.uM, Deep_DOC_uM, SO4_mg.L, Alk_mg.L, 
+         MC_ug.L, pCO2, CO2_uM = CO2.uM, CO2_uM_error = CO2.uM.error, 
          pCH4, CH4_uM = CH4.uM, CH4_uM_error = CH4.uM.error, pN2O, N2O_nM = N2O.nM, 
          N2O_nM_error = N2O.nM.error, d15N_bulk:PercentC_bulk, Sediment_C_N = 
            sediment_C_N, d15N_org:PercentC_org, Sediment_C_N_org, d15N_bulk_POM:C_N_POM,
@@ -245,8 +266,8 @@ carbon_water_surface <- carbon_waterchem2020 %>%
   filter(is.na(Deep)) %>% 
   rename(Surface_DIC_mg.L = TIC..PPM.as.mg.L.C., 
          Surface_DOC_mg.L = TOC..PPM.as.mg.L.C., Surface_TN_ug.N.L = 
-         TN..ug.N.L., Surface_TP_mg.P.L = TP..mg.P.L., Surface_NH3_mg.N.L = 
-         Ammonia..mg.NH3.N.L., Surface_SRP_mg.P.L = SRP..mg.P.L., 
+           TN..ug.N.L., Surface_TP_mg.P.L = TP..mg.P.L., Surface_NH3_mg.N.L = 
+           Ammonia..mg.NH3.N.L., Surface_SRP_mg.P.L = SRP..mg.P.L., 
          Surface_Nitrate_Nitrite_ug.N.L = Nitrate.Nitrite..ug.N.L.) %>% 
   select(-Deep)
 
@@ -281,7 +302,7 @@ master2020 <- full_join(master2020, carbon_waterchem2020)
 ## 2017 ##
 
 # read in chl total data from 2017
-chl_total2017 <- read.csv("data/chl_2017.csv", 
+chl_total2017 <- read.csv("data/chl_total_2017.csv", 
                           na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
 
 # average values per sample
@@ -354,4 +375,3 @@ master2020 <- master2020 %>%
 
 # DIN_ug.N.L = (NH3_mg.N.L*1000)+Nitrate_Nitrite_ug.N.L
 # TN_TP = (TN.ug.N.L/1000) / TP.mg.P.L
-
