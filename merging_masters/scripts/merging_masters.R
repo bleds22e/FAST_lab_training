@@ -37,10 +37,9 @@ master2020 <- read_csv("data/dugout_master2020.csv",
 
 # MAKE COLUMNS MATCH #----------------------------------------------------------
 
-# Column naming general format:
+# NOTE--Column naming general format:
 # first word uppercase, subsequent words lowercase, separated by _
 # . is used to separate components of units with more than one component 
-
 
 # 2017 data
 master2017 <- master2017 %>% 
@@ -315,11 +314,10 @@ master2017 <- left_join(master2017,
                         by = c("Site_ID")) %>% 
   select(Site_ID:Floating_chamber, Chl_total = Chl_total.y, Chla:General_comments)
 
-
 # MATCH COLUMN TYPES #----------------------------------------------------------
 
 # only chr columns should be Site_ID, Field_team, Floating_chamber, Regime, 
-# Water_source, Water_class, and Land_use #
+# Water_source, Water_class, Age_class, and Land_use #
 # Date should be Date, Time should be 'hms' num, everything else should be num #
 
 # fix chr columns in 2017 
@@ -381,19 +379,17 @@ master2020 <- master2020 %>%
   mutate(Time = strptime(.$Time, format = "%H:%M")) %>% # converts to POSIXlt
   mutate(Time = hms::as_hms(Time)) # gets rid of date part
 
-# import know land use descriptors from 2017
+## Match-up Land-use Descriptors from 2017 ##
 master2018 <- left_join(select(master2018, -Land_use),
                         select(master2017, Site_ID, Land_use))
   
-# import know land use descriptors from 2017
 master2019 <- left_join(select(master2019, -Land_use),
                         select(master2017, Site_ID, Land_use))
 
-# import know land use descriptors from 2017
 master2020 <- left_join(select(master2020, -Land_use),
                         select(master2017, Site_ID, Land_use))
 
-# BIND TOGETHER ####
+# BIND TOGETHER #---------------------------------------------------------------
 
 grand_master <- bind_rows(master2017, 
                           master2018,
@@ -401,3 +397,5 @@ grand_master <- bind_rows(master2017,
                           master2020)
 
 write_csv(grand_master, "data/grand_master.csv")
+
+# END #-------------------------------------------------------------------------
