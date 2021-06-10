@@ -314,7 +314,7 @@ chl_total2017 <- chl_total2017 %>%
   filter(Site_ID != '54A?')
 # 22B, 27B; 54A?, 59A
 
-# join 2017 chl total with master2017 (?)
+# join 2017 chl total with master2017
 master2017 <- left_join(master2017, 
                         select(chl_total2017, Site_ID, Chl_total = ChlTotal.ug.L),
                         by = c("Site_ID")) %>% 
@@ -329,6 +329,12 @@ master2017 <- left_join(master2017,
 
 # fix chr columns in 2017 --- NEED TO CONVERT TO 10% LOD; ALSO "NV"?
 master2017 <- master2017 %>% 
+  mutate(Surface_SRP_mg.P.L = replace(Surface_SRP_mg.P.L, 
+                                      Surface_SRP_mg.P.L == '<LOD', 
+                                      0.1*min(as.numeric(Surface_SRP_mg.P.L), na.rm = T)),
+         Surface_Nitrate_Nitrite_ug.N.L = replace(Surface_Nitrate_Nitrite_ug.N.L, 
+                                      Surface_Nitrate_Nitrite_ug.N.L == '<LOD', 
+                                      0.1*min(as.numeric(Surface_Nitrate_Nitrite_ug.N.L), na.rm = T))) %>% 
   mutate(Surface_SRP_mg.P.L = as.numeric(Surface_SRP_mg.P.L), 
          Surface_Nitrate_Nitrite_ug.N.L = as.numeric(Surface_Nitrate_Nitrite_ug.N.L), #
          SO4_mg.L = as.numeric(SO4_mg.L)) 
@@ -365,7 +371,8 @@ master2020 <- master2020 %>%
   mutate(Time = strptime(.$Time, format = "%H:%M")) %>% # converts to POSIXlt
   mutate(Time = hms::as_hms(Time)) # gets rid of date part
 
-## Also need to calculate 10% LOD for 2017 data ##
+
+
 
 ## Can then use mutate to calculate DIN and TN_TP ##
 
