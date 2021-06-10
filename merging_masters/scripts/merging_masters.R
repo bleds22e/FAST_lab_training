@@ -71,7 +71,7 @@ master2017 <- master2017 %>%
          Surface_TP_mg.P.L = TP.mg.P.L, Surface_TN_ug.N.L = TN.ug.N.L,  
          Surface_DIC_mg.L = DIC.mg.L,  Surface_DIC_uM = DIC.uM, 
          Surface_DOC_mg.L = DOC.mg.L, Surface_DOC_uM = DOC.uM, Surface_DIN_ug.N.L,
-         Surface_NP_ration = NP_ratio, Surface_TN_TP = TN_TP, Deep_NH3_mg.N.L, 
+         Surface_NP_ratio = NP_ratio, Surface_TN_TP = TN_TP, Deep_NH3_mg.N.L, 
          Deep_SRP_mg.P.L, Deep_Nitrate_Nitrite_ug.N.L, Deep_TP_mg.P.L, 
          Deep_TN_ug.N.L, Deep_DIC_mg.L, Deep_DIC_uM, Deep_DOC_mg.L, 
          Deep_DOC_uM,  SO4_mg.L = SO4.mg.L, Alk_mg.L = Alk.mg.L, 
@@ -98,11 +98,11 @@ master2018 <- master2018 %>%
              = NA, Deep_Nitrate_Nitrite_ug.N.L = NA, Deep_TP_mg.P.L = NA, 
              Deep_TN_ug.N.L = NA, Surface_TN_TP = NA, Deep_DIC_mg.L = NA, Deep_DIC_uM = NA, 
              Deep_DOC_mg.L = NA, Deep_DOC_uM = NA, SO4_mg.L =  NA, Alk_mg.L = NA, 
-             d15N_bulk = NA, d13C_bulk = NA, mgN_bullk = NA, mgC_bulk = NA,
+             d15N_bulk = NA, d13C_bulk = NA, mgN_bulk = NA, mgC_bulk = NA,
              PercentN_bulk = NA, PercentC_bulk = NA, Sediment_C_N = NA, 
-             d15N_org = NA, d13_org = NA, mgN_org = NA, mgC_org = NA, PercentN_org
+             d15N_org = NA, d13C_org = NA, mgN_org = NA, mgC_org = NA, PercentN_org
              = NA, PercentC_org = NA, Sediment_C_N_org = NA, Regime = NA, d_excess
-             = NA, delI180 = NA, delI2H = NA, Inflow = NA, NP_ratio2 = NA, 
+             = NA, delI18O = NA, delI2H = NA, Inflow = NA, NP_ratio2 = NA, 
              Perimeter = NA, Volume_m3 = NA, SI = NA, DIN_ug.N.L = NA) %>% 
   select(Site_ID, Date, Time, Latitude = latitude, Longitude = longitude, 
          Air_temp, Cloud_perc = `Cloud (%)`, Wind_km.hr, Field_team, Secchi_m = 
@@ -124,11 +124,11 @@ master2018 <- master2018 %>%
          Deep_DOC_uM, Surface_NP_ratio = NP_ratio, Surface_TN_TP, SO4_mg.L, Alk_mg.L, 
          MC_ug.L = MC.ug.L, pCO2, CO2_uM = CO2.uM, CO2_uM_error = CO2.uM.error, 
          pCH4, CH4_uM = CH4.uM, CH4_uM_error = CH4.uM.error, pN2O, N2O_nM = N2O.nM, 
-         N2O_nM_error = N2O.nM.error, d15N_bulk, d13C_bulk, mgN_bullk, mgC_bulk,
-         PercentN_bulk, PercentC_bulk, Sediment_C_N, d15N_org, d13_org, mgN_org, 
+         N2O_nM_error = N2O.nM.error, d15N_bulk, d13C_bulk, mgN_bulk, mgC_bulk,
+         PercentN_bulk, PercentC_bulk, Sediment_C_N, d15N_org, d13C_org, mgN_org, 
          mgC_org, PercentN_org, PercentC_org, Sediment_C_N_org, d15N_bulk_POM:C_N_POM, 
          d2H, d18O, EtoI, Regime, Water_source = `Water Source`, Residence_time = 
-         Residence_Time, Water_class, d_excess, delI180, delI2H, Inflow, Land_use
+         Residence_Time, Water_class, d_excess, delI18O, delI2H, Inflow, Land_use
          = Landuse, Age_years = Age.years, NP_ratio2, B_F_max = b.f.max, B_F_min
          = b.f.min, Rn_dpm.L = Rn.dpm.L, Elevation_m = elevation.m, Area_m2 = 
          Area.m2, Perimeter, Volume_m3, SI, General_comments = `General Comments`) %>% 
@@ -143,7 +143,7 @@ master2019 <- master2019 %>%
              SO4_mg.L = NA, Alk_mg.L = NA, MC_ug.L = NA, Sediment_C_N_org = NA, 
              d15N_bulk_POM = NA, d13C_bulk_POM = NA, ugN_bulk_POM = NA, ugC_bulk_POM = NA, 
              PercentN_bulk_POM = NA, PercentC_bulk_POM = NA, C_N_POM = NA, d_excess = NA, 
-             delI180 = NA, delI2H = NA, Inflow = NA, Elevation_m = NA, Area_m2 = NA, 
+             delI18O = NA, delI2H = NA, Inflow = NA, Elevation_m = NA, Area_m2 = NA, 
              Perimeter = NA, Volume_m3 = NA, SI = NA) %>% 
   select(Site_ID = Site, Date, Time, Latitude = latitude, Longitude = longitude,
          Air_temp, Cloud_perc = `Cloud (%)`, Wind_km.hr, Field_team, Secchi_m = 
@@ -185,15 +185,15 @@ master2020 <- master2020 %>%
              SO4_mg.L = NA, Alk_mg.L = NA, MC_ug.L = NA, pCO2 = NA, CO2_uM = NA,
              CO2_uM_error = NA, pCH4 = NA, CH4_uM = NA, CH4_uM_error = NA, pN2O 
              = NA, N2O_nM = NA, N2O_nM_error = NA, d15N_bulk = NA, d13C_bulk = NA,
-             mgN_bullk = NA, mgC_bulk = NA,PercentN_bulk = NA, PercentC_bulk = NA,
-             Sediment_C_N = NA, d15N_org = NA, d13_org = NA, mgN_org = NA, mgC_org
+             mgN_bulk = NA, mgC_bulk = NA,PercentN_bulk = NA, PercentC_bulk = NA,
+             Sediment_C_N = NA, d15N_org = NA, d13C_org = NA, mgN_org = NA, mgC_org
              = NA, PercentN_org = NA, PercentC_org = NA, Sediment_C_N_org = NA, 
              d15N_bulk_POM = NA, d13C_bulk_POM = NA, ugN_bulk_POM = NA, ugC_bulk_POM 
              = NA, PercentN_bulk_POM = NA, PercentC_bulk_POM = NA, C_N_POM = NA, 
              d2H = NA, d18O = NA, EtoI = NA, Regime = NA, Water_source = NA, 
-             Residence_time = NA, Water_class = NA, d_excess = NA, delI180 = NA, 
+             Residence_time = NA, Water_class = NA, d_excess = NA, delI18O = NA, 
              delI2H = NA, Inflow = NA, Land_use = NA, Age_years = NA, NP_ratio2 = NA,
-             B_F_max = NA, B_F_min = NA, n_dpm.L = NA, Elevation_m = NA, Area_m2
+             B_F_max = NA, B_F_min = NA, Rn_dpm.L = NA, Elevation_m = NA, Area_m2
              = NA, Perimeter = NA, Volume_m3 = NA, SI = NA, General_comments = NA) %>% 
   select(Site_ID:Time, Latitude = latitude, Longitude = longitude, Air_temp, 
          Cloud_perc = `Cloud (%)`, Wind_km.hr, Field_team, Secchi_m = Secchi.m, 
@@ -393,6 +393,11 @@ master2019 <- left_join(select(master2019, -Land_use),
 master2020 <- left_join(select(master2020, -Land_use),
                         select(master2017, Site_ID, Land_use))
 
+# BIND TOGETHER ####
 
-## Need to bind_rows to finish ##
+grand_master <- bind_rows(master2017, 
+                          master2018,
+                          master2019,
+                          master2020)
 
+write_csv(grand_master, "data/grand_master.csv")
