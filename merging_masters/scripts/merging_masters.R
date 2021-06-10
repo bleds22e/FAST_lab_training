@@ -42,19 +42,12 @@ master2020 <- read_csv("data/dugout_master2020.csv",
 # . is used to separate components of units with more than one component 
 
 
-### NOTE! ###
-# Based on 2020 and 2021 data, the following columns need surface and deep:
-# DIC, DOC, TN, TP, NH3, SRP, Nitrate_Nitrite
-# Need to change all years before proceeding
-# 2017-2019, all values already in those columns will go in the "Surface" cols
-
-
 # 2017 data
 master2017 <- master2017 %>% 
   # add columns that are in the 2018 or 2019 data but not 2017
   add_column(Bottle2_temp_in = NA, Bottle2_temp_out = NA, Chl_total = NA, 
-             Deep_NH3_mg.N.L = NA, 
-             Deep_SRP_mg.P.L = NA, Deep_Nitrate_Nitrite_ug.N.L = NA, DIN_ug.N.L = NA, 
+             Deep_NH3_mg.N.L = NA, Deep_SRP_mg.P.L = NA, Deep_Nitrate_Nitrite_ug.N.L 
+             = NA, Surface_DIN_ug.N.L = NA, 
              Deep_TP_mg.P.L = NA, Deep_TN_ug.N.L = NA, Deep_DIC_mg.L = NA, 
              Deep_DIC_uM = NA, Deep_DOC_mg.L = NA, Deep_DOC_uM = NA, MC_ug.L = NA, 
              d15N_bulk_POM = NA, d13C_bulk_POM = NA, ugN_bulk_POM = NA, 
@@ -77,10 +70,11 @@ master2017 <- master2017 %>%
          Surface_Nitrate_Nitrite_ug.N.L = Nitrate_Nitrite.ug.N.L, 
          Surface_TP_mg.P.L = TP.mg.P.L, Surface_TN_ug.N.L = TN.ug.N.L,  
          Surface_DIC_mg.L = DIC.mg.L,  Surface_DIC_uM = DIC.uM, 
-         Surface_DOC_mg.L = DOC.mg.L, Surface_DOC_uM = DOC.uM, Deep_NH3_mg.N.L, 
+         Surface_DOC_mg.L = DOC.mg.L, Surface_DOC_uM = DOC.uM, Surface_DIN_ug.N.L,
+         Surface_NP_ration = NP_ratio, Surface_TN_TP = TN_TP, Deep_NH3_mg.N.L, 
          Deep_SRP_mg.P.L, Deep_Nitrate_Nitrite_ug.N.L, Deep_TP_mg.P.L, 
-         Deep_TN_ug.N.L, Deep_DIC_mg.L, Deep_DIC_uM, DIN_ug.N.L, Deep_DOC_mg.L, 
-         Deep_DOC_uM, NP_ratio, TN_TP, SO4_mg.L = SO4.mg.L, Alk_mg.L = Alk.mg.L, 
+         Deep_TN_ug.N.L, Deep_DIC_mg.L, Deep_DIC_uM, Deep_DOC_mg.L, 
+         Deep_DOC_uM,  SO4_mg.L = SO4.mg.L, Alk_mg.L = Alk.mg.L, 
          MC_ug.L, pCO2, CO2_uM = CO2.uM, CO2_uM_error = CO2.uM.error, pCH4, 
          CH4_uM = CH4.uM, CH4_uM_error = CH4.uM.error, pN2O, N2O_nM = N2O.nM, 
          N2O_nM_error = N2O.nM.error, d15N_bulk:PercentC_bulk, Sediment_C_N = 
@@ -102,7 +96,7 @@ master2018 <- master2018 %>%
              Bottle_temp_out = NA, Bottle2_temp_in = NA, Bottle2_temp_out = NA, 
              Tows = NA, Floating_chamber = NA, Deep_NH3_mg.N.L = NA, Deep_SRP_mg.P.L
              = NA, Deep_Nitrate_Nitrite_ug.N.L = NA, Deep_TP_mg.P.L = NA, 
-             Deep_TN_ug.N.L = NA, TN_TP = NA, Deep_DIC_mg.L = NA, Deep_DIC_uM = NA, 
+             Deep_TN_ug.N.L = NA, Surface_TN_TP = NA, Deep_DIC_mg.L = NA, Deep_DIC_uM = NA, 
              Deep_DOC_mg.L = NA, Deep_DOC_uM = NA, SO4_mg.L =  NA, Alk_mg.L = NA, 
              d15N_bulk = NA, d13C_bulk = NA, mgN_bullk = NA, mgC_bulk = NA,
              PercentN_bulk = NA, PercentC_bulk = NA, Sediment_C_N = NA, 
@@ -126,8 +120,8 @@ master2018 <- master2018 %>%
          = TN.ug.N.L, Surface_DIC_mg.L = DIC.mg.L,  Surface_DIC_uM = DIC.uM, 
          Surface_DOC_mg.L = DOC.mg.L, Surface_DOC_uM = DOC.uM, Deep_NH3_mg.N.L, 
          Deep_SRP_mg.P.L, Deep_Nitrate_Nitrite_ug.N.L, Deep_TP_mg.P.L, 
-         Deep_TN_ug.N.L, Deep_DIC_mg.L, Deep_DIC_uM, DIN_ug.N.L, Deep_DOC_mg.L, 
-         Deep_DOC_uM, NP_ratio, TN_TP, SO4_mg.L, Alk_mg.L, 
+         Deep_TN_ug.N.L, Deep_DIC_mg.L, Deep_DIC_uM, Surface_DIN_ug.N.L = DIN.ug.N.L, Deep_DOC_mg.L, 
+         Deep_DOC_uM, Surface_NP_ratio = NP_ratio, Surface_TN_TP, SO4_mg.L, Alk_mg.L, 
          MC_ug.L = MC.ug.L, pCO2, CO2_uM = CO2.uM, CO2_uM_error = CO2.uM.error, 
          pCH4, CH4_uM = CH4.uM, CH4_uM_error = CH4.uM.error, pN2O, N2O_nM = N2O.nM, 
          N2O_nM_error = N2O.nM.error, d15N_bulk, d13C_bulk, mgN_bullk, mgC_bulk,
@@ -143,8 +137,8 @@ master2018 <- master2018 %>%
 # 2019 data
 master2019 <- master2019 %>% 
   add_column(Bottle2_temp_in = NA, Bottle2_temp_out = NA, Deep_NH3_mg.N.L = NA, 
-             Deep_SRP_mg.P.L = NA, Deep_Nitrate_Nitrite_ug.N.L = NA, DIN_ug.N.L = NA, 
-             Deep_TP_mg.P.L = NA, Deep_TN_ug.N.L = NA, TN_TP = NA,
+             Deep_SRP_mg.P.L = NA, Deep_Nitrate_Nitrite_ug.N.L = NA, Surface_DIN_ug.N.L = NA, 
+             Deep_TP_mg.P.L = NA, Deep_TN_ug.N.L = NA, Surface_TN_TP = NA,
              Deep_DIC_mg.L = NA, Deep_DIC_uM = NA, Deep_DOC_mg.L = NA, Deep_DOC_uM = NA, 
              SO4_mg.L = NA, Alk_mg.L = NA, MC_ug.L = NA, Sediment_C_N_org = NA, 
              d15N_bulk_POM = NA, d13C_bulk_POM = NA, ugN_bulk_POM = NA, ugC_bulk_POM = NA, 
@@ -159,7 +153,7 @@ master2019 <- master2019 %>%
          Surface_cond = Surface_Cond, Surface_sal_ppt = Surface_Sal.ppt, Surface_pH, 
          Deep_temp = Deep_Temp, Deep_DO_sat = Deep_DO.sat, Deep_DO_mg.L = Deep_DO.mg.L, 
          Deep_cond = Deep_Cond, Deep_sal_ppt = Deep_Sal.ppt, Deep_pH, TDS_mg.L = 
-           TDS.mg.L, YSI_atm, Core_length_cm = `Core_length (cm)`, Sediment_depth, 
+         TDS.mg.L, YSI_atm, Core_length_cm = `Core_length (cm)`, Sediment_depth, 
          Bottle_temp_in = Bottle_Temp_In, Bottle_temp_out, Bottle2_temp_in, 
          Bottle2_temp_out, Tows, Floating_chamber = `Floating_chamberY/N`, Chl_total, 
          Chla, Surface_NH3_mg.N.L = NH3.mg.N.L, Surface_SRP_mg.P.L = SRP.mg.P.L, 
@@ -168,9 +162,10 @@ master2019 <- master2019 %>%
          Surface_DIC_mg.L = DIC.mg.L,  Surface_DIC_uM = DIC.uM, 
          Surface_DOC_mg.L = DOC.mg.L, Surface_DOC_uM = DOC.uM, Deep_NH3_mg.N.L, 
          Deep_SRP_mg.P.L, Deep_Nitrate_Nitrite_ug.N.L, Deep_TP_mg.P.L, 
-         Deep_TN_ug.N.L, Deep_DIC_mg.L, Deep_DIC_uM, DIN_ug.N.L, Deep_DOC_mg.L, 
-         Deep_DOC_uM, NP_ratio, TN_TP, SO4_mg.L, Alk_mg.L, MC_ug.L, pCO2, CO2_uM 
-         = CO2.uM, CO2_uM_error = CO2.uM.error, pCH4, CH4_uM = CH4.uM, CH4_uM_error
+         Deep_TN_ug.N.L, Deep_DIC_mg.L, Deep_DIC_uM, Surface_DIN_ug.N.L, Deep_DOC_mg.L, 
+         Deep_DOC_uM, Surface_NP_ratio = NP_ratio, Surface_TN_TP, SO4_mg.L, Alk_mg.L, 
+         MC_ug.L, pCO2, CO2_uM = CO2.uM, CO2_uM_error = CO2.uM.error, pCH4, 
+         CH4_uM = CH4.uM, CH4_uM_error
          = CH4.uM.error, pN2O, N2O_nM = N2O.nM, N2O_nM_error = N2O.nM.error, 
          d15N_bulk:PercentC_bulk, Sediment_C_N = sediment_C_N, d15N_org:PercentC_org,
          Sediment_C_N_org, d15N_bulk_POM:C_N_POM, d2H:Regime, Water_source = 
@@ -185,8 +180,8 @@ master2020 <- master2020 %>%
   add_column(Field_team = NA, TDS_mg.L = NA, Core_length_cm = NA, Sediment_depth = 
              NA, Bottle_temp_in = NA, Bottle2_temp_in = NA, Tows = NA, 
              Floating_chamber = NA, Chl_total = NA, Chla = NA, Surface_DIC_uM = NA, 
-             Surface_DOC_uM = NA, Deep_DIC_uM = NA, DIN_ug.N.L
-             = NA, Deep_DOC_uM = NA, NP_ratio = NA, TN_TP = NA, 
+             Surface_DOC_uM = NA, Deep_DIC_uM = NA, Surface_DIN_ug.N.L
+             = NA, Deep_DOC_uM = NA, Surface_NP_ratio = NA, Surface_TN_TP = NA, 
              SO4_mg.L = NA, Alk_mg.L = NA, MC_ug.L = NA, pCO2 = NA, CO2_uM = NA,
              CO2_uM_error = NA, pCH4 = NA, CH4_uM = NA, CH4_uM_error = NA, pN2O 
              = NA, N2O_nM = NA, N2O_nM_error = NA, d15N_bulk = NA, d13C_bulk = NA,
@@ -327,18 +322,33 @@ master2017 <- left_join(master2017,
 # Water_source, Water_class, and Land_use #
 # Date should be Date, Time should be 'hms' num, everything else should be num #
 
-# fix chr columns in 2017 --- NEED TO CONVERT TO 10% LOD; ALSO "NV"?
+# fix chr columns in 2017 
 master2017 <- master2017 %>% 
+  # replace '<LOD' with 10% of smallest value
   mutate(Surface_SRP_mg.P.L = replace(Surface_SRP_mg.P.L, 
                                       Surface_SRP_mg.P.L == '<LOD', 
                                       0.1*min(as.numeric(Surface_SRP_mg.P.L), na.rm = T)),
          Surface_Nitrate_Nitrite_ug.N.L = replace(Surface_Nitrate_Nitrite_ug.N.L, 
                                       Surface_Nitrate_Nitrite_ug.N.L == '<LOD', 
                                       0.1*min(as.numeric(Surface_Nitrate_Nitrite_ug.N.L), na.rm = T))) %>% 
+  # convert columns to numeric
   mutate(Surface_SRP_mg.P.L = as.numeric(Surface_SRP_mg.P.L), 
          Surface_Nitrate_Nitrite_ug.N.L = as.numeric(Surface_Nitrate_Nitrite_ug.N.L), #
-         SO4_mg.L = as.numeric(SO4_mg.L)) 
-# Age_years = as.numeric(Age_years))  I'm thinking we make Age_years a character column for simplicity...
+         SO4_mg.L = as.numeric(SO4_mg.L)) %>% 
+  # calculate other columns 
+  mutate(Surface_DIN_ug.N.L = (Surface_NH3_mg.N.L*1000) + Surface_Nitrate_Nitrite_ug.N.L)
+
+# calculate columns in other years
+master2018 <- master2018 %>% 
+  mutate(Surface_TN_TP = (Surface_TN_ug.N.L/1000) / Surface_TP_mg.P.L)
+
+master2019 <- master2019 %>% 
+  mutate(Surface_DIN_ug.N.L = (Surface_NH3_mg.N.L*1000) + Surface_Nitrate_Nitrite_ug.N.L,
+         Surface_TN_TP = (Surface_TN_ug.N.L/1000) / Surface_TP_mg.P.L)
+
+master2020 <- master2020 %>% 
+  mutate(Surface_DIN_ug.N.L = (Surface_NH3_mg.N.L*1000) + Surface_Nitrate_Nitrite_ug.N.L,
+         Surface_TN_TP = (Surface_TN_ug.N.L/1000) / Surface_TP_mg.P.L)
 
 # fix latitude in 2020 -- need to remove all extra spaces (before, after, and by the decimal)
 master2020 <- master2020 %>% 
@@ -371,14 +381,18 @@ master2020 <- master2020 %>%
   mutate(Time = strptime(.$Time, format = "%H:%M")) %>% # converts to POSIXlt
   mutate(Time = hms::as_hms(Time)) # gets rid of date part
 
+# import know land use descriptors from 2017
+master2018 <- left_join(select(master2018, -Land_use),
+                        select(master2017, Site_ID, Land_use))
+  
+# import know land use descriptors from 2017
+master2019 <- left_join(select(master2019, -Land_use),
+                        select(master2017, Site_ID, Land_use))
 
+# import know land use descriptors from 2017
+master2020 <- left_join(select(master2020, -Land_use),
+                        select(master2017, Site_ID, Land_use))
 
-
-## Can then use mutate to calculate DIN and TN_TP ##
 
 ## Need to bind_rows to finish ##
 
-# WORK AREA #===================================================================
-
-# DIN_ug.N.L = (NH3_mg.N.L*1000)+Nitrate_Nitrite_ug.N.L
-# TN_TP = (TN.ug.N.L/1000) / TP.mg.P.L
