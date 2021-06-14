@@ -322,13 +322,15 @@ master2017 <- left_join(master2017,
 
 # fix chr columns in 2017 
 master2017 <- master2017 %>% 
-  # replace '<LOD' with 10% of smallest value
+  # replace '<LOD' with 10% of LOD
+  # LOD for SRP is 0.01 mg/L
+  # LOD for NO2/NO3 is 5 ug/L
   mutate(Surface_SRP_mg.P.L = replace(Surface_SRP_mg.P.L, 
                                       Surface_SRP_mg.P.L == '<LOD', 
-                                      0.1*min(as.numeric(Surface_SRP_mg.P.L), na.rm = T)),
+                                      0.1*0.01),
          Surface_Nitrate_Nitrite_ug.N.L = replace(Surface_Nitrate_Nitrite_ug.N.L, 
                                       Surface_Nitrate_Nitrite_ug.N.L == '<LOD', 
-                                      0.1*min(as.numeric(Surface_Nitrate_Nitrite_ug.N.L), na.rm = T))) %>% 
+                                      0.1*5.0)) %>% 
   # convert columns to numeric
   mutate(Surface_SRP_mg.P.L = as.numeric(Surface_SRP_mg.P.L), 
          Surface_Nitrate_Nitrite_ug.N.L = as.numeric(Surface_Nitrate_Nitrite_ug.N.L), #
