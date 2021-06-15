@@ -4,9 +4,13 @@
 #          Summer 2021            #
 ###################################
 
+# PACAKGES & WD #---------------------------------------------------------------
 library(tidyverse)
 library(hms)
 library(stringr)
+
+# set working directory
+setwd("./merging_masters/")
 
 # DATA #------------------------------------------------------------------------
 
@@ -209,6 +213,26 @@ master2020 <- master2020 %>%
 
 # ADDING IN DATA #--------------------------------------------------------------
 
+
+## 2017 ##
+
+# read in chl total data from 2017
+chl_total2017 <- read.csv("data/chl_2017.csv", 
+                          na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
+
+# average values per sample
+chl_total2017 <- chl_total2017 %>% 
+  group_by(Site_ID) %>% 
+  arrange(Site_ID) %>% 
+  summarise(across(ChlA.ug.L:ChlTotal.ug.L, mean)) %>% 
+  filter(Site_ID != '54A?')
+
+# join 2017 chl total with master2017
+master2017 <- left_join(master2017, 
+                        select(chl_total2017, Site_ID, Chl_total = ChlTotal.ug.L),
+                        by = c("Site_ID")) %>% 
+  select(Site_ID:Floating_chamber, Chl_total = Chl_total.y, Chla:General_comments)
+
 ## 2020 ##
 
 # read in DIC, DOC, and water chem data for 2020
@@ -265,16 +289,6 @@ carbon_water_surface <- carbon_waterchem2020 %>%
          Surface_Nitrate_Nitrite_ug.N.L = Nitrate.Nitrite..ug.N.L.) %>% 
   select(-Deep)
 
-# carbon_waterchem2020 <- full_join(carbon_water_surface, carbon_water_deep)
-
-# differences between waterchem/carbon & master2020 files
-# Site_ID and Date columns
-# diff1 <- setdiff(select(carbon_waterchem2020, Site_ID, Date), 
-#                  select(master2020, Site_ID, Date))
-# 
-# diff2 <- setdiff(select(master2020, Site_ID, Date),
-#                  select(carbon_waterchem2020, Site_ID, Date))
-
 # fix differences in dates according to Ryan's corrections
 carbon_water_surface <- carbon_water_surface %>% 
   mutate(Date = replace(Date, Site_ID == '56A' & Date == "2020-06-02", "2020-06-03"),
@@ -294,25 +308,6 @@ master2020 <- master2020 %>%
 master2020 <- full_join(master2020, carbon_water_surface) %>% 
   full_join(., carbon_water_deep)
 
-## 2017 ##
-
-# read in chl total data from 2017
-chl_total2017 <- read.csv("data/chl_2017.csv", 
-                          na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
-
-# average values per sample
-chl_total2017 <- chl_total2017 %>% 
-  group_by(Site_ID) %>% 
-  arrange(Site_ID) %>% 
-  summarise(across(ChlA.ug.L:ChlTotal.ug.L, mean)) %>% 
-  filter(Site_ID != '54A?')
-# 22B, 27B; 54A?, 59A
-
-# join 2017 chl total with master2017
-master2017 <- left_join(master2017, 
-                        select(chl_total2017, Site_ID, Chl_total = ChlTotal.ug.L),
-                        by = c("Site_ID")) %>% 
-  select(Site_ID:Floating_chamber, Chl_total = Chl_total.y, Chla:General_comments)
 
 # MATCH COLUMN TYPES #----------------------------------------------------------
 
@@ -333,7 +328,7 @@ master2017 <- master2017 %>%
                                       0.1*5.0)) %>% 
   # convert columns to numeric
   mutate(Surface_SRP_mg.P.L = as.numeric(Surface_SRP_mg.P.L), 
-         Surface_Nitrate_Nitrite_ug.N.L = as.numeric(Surface_Nitrate_Nitrite_ug.N.L), #
+         Surface_Nitrate_Nitrite_ug.N.L = as.numeric(Surface_Nitrate_Nitrite_ug.N.L), 
          SO4_mg.L = as.numeric(SO4_mg.L)) %>% 
   # calculate other columns 
   mutate(Surface_DIN_ug.N.L = (Surface_NH3_mg.N.L*1000) + Surface_Nitrate_Nitrite_ug.N.L)
@@ -398,6 +393,16 @@ grand_master <- bind_rows(master2017,
                           master2019,
                           master2020)
 
-write_csv(grand_master, "data/grand_master.csv")
+#write_csv(grand_master, "data/grand_master.csv")
 
 # END #-------------------------------------------------------------------------
+
+grand_master_NA <- grand_master %>%
+  mutate(Year = as.factor(lubridate::year(Date))) %>% 
+  group_by(Year) %>% 
+  summarise_all(funs(sum(is.na(.)))) %>% 
+  pivot_longer(Site_ID:General_comments,
+               names_to = "Column", values_to = "NA_count") %>% 
+  filter(NA_count > 40)
+
+            
