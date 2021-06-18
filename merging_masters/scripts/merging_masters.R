@@ -397,6 +397,8 @@ grand_master <- bind_rows(master2017,
 
 # END #-------------------------------------------------------------------------
 
+grand_master <- read_csv("data/grand_master.csv")
+
 grand_master_NA <- grand_master %>%
   mutate(Year = as.factor(lubridate::year(Date))) %>% 
   group_by(Year) %>% 
