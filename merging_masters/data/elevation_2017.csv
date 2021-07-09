@@ -1,0 +1,103 @@
+﻿Site_ID,Date,Time,latitude,longitude,Soil Salinity,pH,Soil Zone,Elevation.m,Location of nearest observation well,ion Concentration in groundwater (mg/L),Major Salts in groundwater,Anion,2017 Well groundwater depth,dugout elevation above groundwater,Surface_Sal.ppt
+5,24-Aug-17,10:03,51.37151,-102.58316,moderate,alkaline,dark grey,484,Yorkton,1030,HCO3,HCO3,497.5,-13.5,1.88
+20,24-Jul-17,11:41,50.10833,-102.04143,very slight,unclassified,black,619,Forget,501,"CaHCO3, MgHCO3",HCO4,604.5,14.5,0.74
+36,10-Aug-17,15:05,52.5244,-105.21877,very slight,alkaline,dark grey,539,Bruno,2430,"CaSO4, MgSO4",SO4,548,-9,1.06
+49,24-Jul-17,13:15,50.02262,-101.88369,slight,unclassified,black,599,Forget,501,"CaHCO3, MgHCO3",HCO3,604.5,-5.5,0.75
+51,24-Jul-17,16:19,49.99234,-101.90707,slight,unclassified,black,608,Forget,501,"CaHCO3, MgHCO3",HCO3,604.5,3.5,1.06
+52,25-Jul-17,11:27,49.85824,-101.71194,slight,unclassified,black,590,Forget,501,"CaHCO3, MgHCO3",HCO3,604.5,-14.5,1.41
+65,11-Aug-17,11:50,52.55178,-109.89581,very slight,slightly acid to neutral,dark brown,667,Bruno,2430,"CaSO4, MgSO4",SO4,548,119,0.12
+68,8-Aug-17,9:30,50.63367,-104.68465,very slight,alkaline,brown,585,Regina,608,"CaHCO3, MgHCO3",HCO3,560.5,24.5,0.12
+10A,24-Aug-17,12:25,51.77975,-103.42531,slight,alkaline,dark grey,533,Yorkton,1030,HCO3,HCO3,498.5,34.5,0.42
+10B,24-Aug-17,13:14,51.77527,-103.46152,slight,alkaline,dark grey,533,Yorkton,1030,HCO3,HCO3,498.5,34.5,0.76
+10C,24-Aug-17,10:30,51.80564,103.37831,very slight,alkaline,dark grey,532,Yorkton,1030,HCO3,HCO3,498.5,33.5,0.62
+10D,24-Aug-17,11:39,51.80376,-103.40521,very slight,alkaline,dark grey,532,Yorkton,1030,HCO3,HCO3,498.5,33.5,2.27
+14A,12-Jul-17,10:15 AM,51.04648,-104.65134,very slight,alkaline,brown,547,Regina,608,"CaHCO3, MgHCO3",HCO3,560.5,-13.5,3.07
+14B,12-Jul-17,12:50,50.995,-104.68568,very slight,alkaline,black,562,Regina,608,"CaHCO3, MgHCO3",HCO3,560.5,1.5,0.67
+15A,3-Aug-17,11:41,49.57961,-101.89367,slight,neutral to slightly alkaline,dark grey,617,Forget,501,"CaHCO3, MgHCO3",HCO3,604.5,12.5,0.87
+15B,3-Aug-17,14:15,49.52981,-101.911,slight,neutral to slightly alkaline,dark grey,597,Forget,501,"CaHCO3, MgHCO3",HCO3,604.5,-7.5,0.57
+22B,8-Aug-17,12:28,51.14319,105.65466,very slight,alkaline,brown,588.7,Simpson,267,CaHCO3,HCO3,492,96.7,0.95
+24A,14-Aug-17,14:15,49.9192,-109.84868,slight,neutral to slightly alkaline,brown,807.4,Verlo,419,CaHCO3,HCO3,730,77.4,0.43
+24B,14-Aug-17,13:00,49.91797,-109.85177,slight,neutral to slightly alkaline,brown,805,Verlo,419,CaHCO3,HCO3,730,75,0.12
+26A,14-Aug-17,12:48,49.26151,-108.409,very slight,neutral to slightly alkaline,brown,964,Shaunavon,1090,"NaHCO3, NaSO4",HCO3,895,69,0.41
+26B,14-Aug-17,13:24,49.26081,-108.40865,very slight,neutral to slightly alkaline,brown,964,Shaunavon,1090,"NaHCO3, NaSO4",HCO3,895,69,0.39
+26C,14-Aug-17,14:37,49.25726,-108.40901,very slight,neutral to slightly alkaline,brown,966,Shaunavon,1090,"NaHCO3, NaSO4",HCO3,895,71,0.30
+27A,4-Aug-17,12:04,49.0409,-103.5006,very slight,neutral to slightly alkaline,dark brown,595,Estevan,1590,NaHCO3,HCO3,550,45,0.13
+27B,4-Aug-17,12:30,49.0414,-103.50101,very slight,neutral to slightly alkaline,dark brown,596,Estevan,1590,NaHCO3,HCO3,550,46,0.11
+27C,4-Aug-17,11:00,49.04037,-103.49865,very slight,neutral to slightly alkaline,dark brown,596.3,Estevan,1590,NaHCO3,HCO3,550,46.3,0.13
+30A,17-Aug-17,12:05,51.34198,-108.04363,very slight,alkaline,brown,603,Tyner,2823,NaSO4,SO4,582,21,0.35
+30B,17-Aug-17,14:17,51.34313,-108.06308,very slight,alkaline,brown,590,Tyner,2823,NaSO4,SO4,582,8,0.34
+31A,17-Aug-17,15:17,51.14608,-107.5329,very slight,alkaline,brown,671,Verlo,419,CaHCO3,HCO3,730,-59,8.57
+31B,17-Aug-17,15:54,51.1386,-107.53661,very slight,alkaline,brown,685.1,Verlo,419,CaHCO3,HCO3,730,-44.9,2.24
+32A,9-Aug-17,11:00,50.43921,-103.67125,slight,unclassified,dark grey,608,Regina,608,"CaHCO3, MgHCO3",HCO3,560.5,47.5,1.77
+32B,9-Aug-17,11:51,50.44337,-103.65922,slight,unclassified,dark grey,624,Regina,608,"CaHCO3, MgHCO3",HCO3,560.5,63.5,1.23
+32C,9-Aug-17,9:43,50.44165,-103.67529,slight,unclassified,dark grey,608,Regina,608,"CaHCO3, MgHCO3",HCO3,560.5,47.5,2.10
+44A,22-Aug-17,9:58,52.71911,-108.8854,very slight,moderately acid,dark grey,618,Unity,944,"CaHCO3, MgHCO3",HCO3,658,-40,0.20
+44B,22-Aug-17,8:43,52.6791,-108.90743,slight,slightly acid,dark grey,631,Unity,944,"CaHCO3, MgHCO3",HCO3,658,-27,0.73
+45A,3-Aug-17,16:54,49.83189,-101.7569,slight,unclassified,dark grey,601,Forget,501,"CaHCO3, MgHCO3",HCO3,604.5,-3.5,0.78
+45B,3-Aug-17,15:47,49.79956,-101.76376,slight,unclassified,dark grey,603,Forget,501,"CaHCO3, MgHCO3",HCO3,604.5,-1.5,0.16
+45C,3-Aug-17,15:15,49.80365,-101.76676,slight,unclassified,dark grey,604,Forget,501,"CaHCO3, MgHCO3",HCO3,604.5,-0.5,0.81
+45D,3-Aug-17,14:03,49.80242,-101.74679,slight,unclassified,dark grey,600,Forget,501,"CaHCO3, MgHCO3",HCO3,604.5,-4.5,1.11
+48A,24-Jul-17,14:00,49.98583,-101.9271,slight,unclassified,black,619,Forget,501,"CaHCO3, MgHCO3",HCO3,604.5,14.5,1.19
+48B,24-Jul-17,12:10,49.99197,-101.9299,slight,unclassified,black,617.9,Forget,501,"CaHCO3, MgHCO3",HCO3,604.5,13.4,0.90
+4A,27-Jul-17,11:38,50.33809,-104.4821,very slight,alkaline,dark brown,576,Regina,608,"CaHCO3, MgHCO3",HCO3,560.5,15.5,0.31
+4B,27-Jul-17,9:58,50.56744,-104.46211,very slight,alkaline,dark brown,634,Regina,608,"CaHCO3, MgHCO3",HCO3,560.5,73.5,0.38
+4C,27-Jul-17,12:47,50.33757,-104.50439,very slight,alkaline,dark brown,576,Regina,608,"CaHCO3, MgHCO3",HCO3,560.5,15.5,0.29
+4D,27-Jul-17,12:30,50.35226,-104.57456,very slight,alkaline,dark brown,572,Regina,608,"CaHCO3, MgHCO3",HCO3,560.5,11.5,0.12
+4E,27-Jul-17,13:30,50.35349,-104.57772,very slight,alkaline,dark brown,572,Regina,608,"CaHCO3, MgHCO3",HCO3,560.5,11.5,0.37
+4G,27-Jul-17,9:42,50.39611,-104.57745,very slight,alkaline,dark brown,576,Regina,608,"CaHCO3, MgHCO3",HCO3,560.5,15.5,0.24
+4H,23-Aug-17,9:16,50.33835,-104.6525,very slight,alkaline,brown,573,Regina,608,"CaHCO3, MgHCO3",HCO3,560.5,12.5,0.29
+53A,25-Jul-17,9:00,49.95133,-101.79024,slight,unclassified,black,595,Forget,501,"CaHCO3, MgHCO3",HCO3,604.5,-9.5,1.47
+54A,25-Jul-17,10:04,49.94727,-101.76752,slight,unclassified,black,593,Forget,501,"CaHCO3, MgHCO3",HCO3,604.5,-11.5,1.08
+54B,24-Jul,14:33,49.97308,-101.76763,slight,unclassified,black,589.8,Forget,501,"CaHCO3, MgHCO3",HCO3,604.5,-14.7,0.78
+55B,25-Jul-17,9:03,49.91539,-101.69835,very slight,unclassified,black,586,Forget,501,"CaHCO3, MgHCO3",HCO3,604.5,-18.5,0.20
+56A,2-Aug-17,10:00,49.98368,-105.28633,slight,neutral to slightly alkaline,dark brown,708.7,Baildon,1230,CaCO3,HCO3,577,131.7,4.73
+56B,2-Aug-17,11:58,49.98273,-105.30243,slight,neutral to slightly alkaline,dark brown,701,Baildon,1230,CaCO3,HCO3,577,124,3.91
+57A,22-Aug-17,9:01,52.41588,-107.93136,none,slightly acid   ,dark grey,729,Unity,944,"CaHCO3, MgHCO3",HCO3,658,71,0.21
+57B,22-Aug-17,9:42,52.41474,-107.92747,none,slightly acid   ,dark grey,729,Unity,944,"CaHCO3, MgHCO3",HCO3,658,71,0.37
+57C,22-Aug-17,10:20,52.40814,-107.92896,none,slightly acid   ,dark grey,724,Unity,944,"CaHCO3, MgHCO3",HCO3,658,66,0.24
+57D,22-Aug-17,11:01,52.40304,-107.92971,none,slightly acid   ,dark grey,728,Unity,944,"CaHCO3, MgHCO3",HCO3,658,70,0.27
+58A,22-Aug-17,15:21,52.62412,-107.45502,very slight,slightly acid to neutral,dark grey,569,Dalmery,2410,CaSO4  ,SO4,509,60,1.70
+58B,21-Aug-17,13:52,52.6377,-107.45095,very slight,slightly acid to neutral,dark grey,575,Dalmery,2410,CaSO4  ,SO4,509,66,0.41
+58C,21-Aug-17,11:59,52.63996,-107.45967,very slight,slightly acid to neutral,dark grey,573,Dalmery,2410,CaSO4  ,SO4,509,64,0.26
+59A,21-Aug-17,14:13,52.61391,-107.40239,very slight,slightly acid to neutral,dark grey,567,Dalmery,2410,CaSO4  ,SO4,509,58,0.13
+59B,21-Aug-17,14:50,52.61742,-107.3954,very slight,slightly acid to neutral,dark grey,566.9,Dalmery,2410,CaSO4  ,SO4,509,57.9,0.07
+59D,21-Aug-17,11:48,52.65964,-107.37451,none,neutral to slightly alkaline,dark grey,569,Dalmery,2410,CaSO4  ,SO4,509,60,0.40
+60A,18-Aug-17,10:08,51.67165,-107.29446,very slight,neutral to slightly alkaline,dark brown,539,Swanson,422,CaHCO3,HCO3,530.5,8.5,0.19
+60B,18-Aug-17,10:48,51.67624,-107.29423,very slight,neutral to slightly alkaline,dark brown,536,Swanson,422,CaHCO3,HCO3,530.5,5.5,0.10
+60C,18-Aug-17,11:43,51.68453,-107.2179,slight,neutral to slightly alkaline,brown,547,Swanson,422,CaHCO3,HCO3,530.5,16.5,0.54
+61A,1-Aug-17,9:51,50.23982,-106.12133,very slight,neutral to slightly alkaline,dark brown,700.6,Shamrock,,,,85,,0.77
+61B,1-Aug-17,13:46,50.23964,-105.99758,none,neutral to slightly alkaline,dark brown,715.3,Shamrock,,,,85,,2.85
+61C,1-Aug-17,11:50,50.25328,-106.07295,very slight,neutral to slightly alkaline,dark brown,725,Shamrock,,,,85,,0.41
+62B,1-Aug-17,12:42,50.33084,-106.507811,none,neutral to slightly alkaline,brown,686.4,Shamrock,,,,85,,1.22
+62C,1-Aug-17,11:34,50.31712,-106.50479,none,neutral to slightly alkaline,brown,689,Shamrock,,,,85,,0.60
+62E,1-Aug-17,14:25,50.31057,-106.42409,very slight,neutral to slightly alkaline,dark brown,704.2,Shamrock,,,,85,,3.17
+63A,10-Aug-17,11:43,51.14324,-105.65466,very slight,alkaline,brown,589,Hague,2870,NaSO4,SO4,465,124,0.96
+63B,10-Aug-17,13:02,52.6918,-106.02972,very slight,slightly acid to neutral,dark grey,488,Hague,2870,NaSO4,SO4,465,23,0.26
+64A,17-Aug-17,11:14,50.77282,-107.94051,very slight,alkaline,brown,646,Verlo,419,CaHCO3,HCO3,730,-84,0.26
+64B,17-Aug-17,12:26,50.79427,-107.9444,slight,alkaline,brown,659,Verlo,419,CaHCO3,HCO3,730,-71,0.20
+64C,17-Aug-17,13:10,50.79424,-107.93136,slight,alkaline,brown,661,Verlo,419,CaHCO3,SO4,730,-69,0.40
+66A,2-Aug-17,10:31,50.12525,-103.86236,severe,unclassified,dark brown,605,Riceton,6700,NaSO4,SO4,564.5,40.5,1.89
+66B,2-Aug-17,12:56,50.13197,-103.84161,slight,unclassified,dark brown,605,Riceton,6700,NaSO4,SO4,564.5,40.5,1.75
+66C,2-Aug-17,14:08,50.13321,-103.85594,slight,unclassified,dark brown,607,Riceton,6700,NaSO4,SO4,564.5,42.5,0.28
+67A,4-Aug-17,11:06,50.27662,-103.71397,slight,unclassified,brown,659,Riceton,6700,NaSO4,SO4,564.5,94.5,0.91
+67B,4-Aug-17,11:55,50.2821,-103.71067,slight,unclassified,brown,658,Riceton,6700,NaSO4,SO4,564.5,93.5,0.59
+69A,15-Aug-17,10:33,49.32986,-109.04867,very slight,neutral to slightly alkaline,brown,997,Shaunavon,1090,"NaHCO3, NaSO4",HCO3,895,102,0.29
+69B,15-Aug-17,9:45,49.33156,-109.10526,very slight,neutral to slightly alkaline,brown,973,Shaunavon,1090,"NaHCO3, NaSO4",HCO3,895,78,0.34
+69C,15-Aug-17,8:52,49.29757,-109.10841,very slight,slightly acid to neutral,brown,966,Shaunavon,1090,"NaHCO3, NaSO4",HCO3,895,71,0.22
+70A,15-Aug-17,12:11,50.35456,-108.87658,very slight,neutral to slightly alkaline,brown,738,Verlo,419,CaHCO3,HCO3,730,8,2.68
+70B,15-Aug-17,9:08,50.39857,-109.08987,none,neutral to slightly alkaline,brown,707.5,Verlo,419,CaHCO3,HCO3,730,-22.5,0.73
+70C,15-Aug-17,10:45,50.39632,-109.11725,none,neutral to slightly alkaline,brown,713.2,Verlo,419,CaHCO3,HCO3,730,-16.8,0.32
+74A,24-Aug-17,11:37,51.54864,-102.76026,very slight,alkaline,black,491,Yorkton,1030,HCO3,HCO3,498.5,-7.5,0.45
+74B,24-Aug-17,12:23,51.55365,-102.76506,very slight,alkaline,black,495,Yorkton,1030,HCO3,HCO3,498.5,-3.5,0.38
+74C,24-Aug-17,13:13,51.54495,-102.76698,very slight,alkaline,black,494,Yorkton,1030,HCO3,HCO3,498.5,-4.5,0.35
+7A,18-Aug-17,9:50,51.41351,-107.00191,slight,neutral to slightly alkaline,dark brown,524,Baildon,1230,CaCO3,HCO3,577,-53,0.56
+7B,18-Aug-17,9:03,51.42597,-107.0004,very slight,neutral to slightly alkaline,dark brown,535.5,Baildon,1230,CaCO3,HCO3,577,-41.5,0.46
+7I,18-Aug-17,10:59,51.50316,-106.83583,very slight,slightly acid to neutral,dark brown,540,Baildon,1230,CaCO3,HCO3,577,-37,0.64
+8A,10-Aug-17,12:07,52.5952,-104.80083,very slight,alkaline,dark black,556,Bruno,2430,"CaSO4, MgSO4",SO4,548,8,0.43
+8B,10-Aug-17,14:05,52.60226,-104.8098,very slight,alkaline,dark black,550,Bruno,2430,"CaSO4, MgSO4",SO4,548,2,0.42
+8C,10-Aug-17,15:34,52.61549,-104.81382,very slight,alkaline,dark black,549,Bruno,2430,"CaSO4, MgSO4",SO4,548,1,0.50
+8D,11-Aug-17,8:27,52.62899,-104.70537,none,neutral to slightly alkaline,dark grey,538.9,Bruno,2430,"CaSO4, MgSO4",SO4,548,-9.1,0.39
+8E,11-Aug-17,9:52,52.6333,-104.6604,none,neutral to slightly alkaline,dark grey,530,Bruno,2430,"CaSO4, MgSO4",SO4,548,-18,0.25
+8F,11-Aug-17,8:24,52.627937,-104.715069,none,neutral to slightly alkaline,grey,539,Bruno,2430,"CaSO4, MgSO4",SO4,548,-9,0.45
+8G,11-Aug-17,10:11,52.62561,-104.65643,none,neutral to slightly alkaline,grey,529,Bruno,2430,"CaSO4, MgSO4",SO4,548,-19,0.59
+8H,11-Aug-17,11:20,52.62542,-104.64627,none,neutral to slightly alkaline,grey,533.7,Bruno,2430,"CaSO4, MgSO4",SO4,548,-14.3,0.46
