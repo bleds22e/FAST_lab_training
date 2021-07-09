@@ -216,6 +216,7 @@ master2020 <- master2020 %>%
 
 ## 2017 ##
 
+# Chl data #
 # read in chl total data from 2017
 chl_total2017 <- read.csv("data/chl_2017.csv", 
                           na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
@@ -232,6 +233,23 @@ master2017 <- left_join(master2017,
                         select(chl_total2017, Site_ID, Chl_total = ChlTotal.ug.L),
                         by = c("Site_ID")) %>% 
   select(Site_ID:Floating_chamber, Chl_total = Chl_total.y, Chla:General_comments)
+
+# POM data #
+pom_2017 <- read_csv("data/POM_2017.csv") %>% 
+  rename(Site_ID = Sample, )
+
+# MC data # -- ready to merge
+mc_2017 <- read_csv("data/MC_2017.csv") %>% 
+  rename(Site_ID = Name, MC_ug.L = `[MC] ppb`) %>% 
+  filter(MC_ug.L != ">2", MC_ug.L != "CV % Off", MC_ug.L != "CV % off",
+         !str_detect(Site_ID, "SD"),
+         !str_detect(Site_ID, "CD")) %>% 
+  mutate(MC_ug.L = replace(MC_ug.L, MC_ug.L == '<.2', 0.02),
+         Site_ID = toupper(str_sub(Site_ID, 2, nchar(Site_ID)))) 
+
+# Elevation # -- ready to merge
+elevation_2017 <- read_csv("data/elevation_2017.csv") %>% 
+  select(Site_ID, Elevation_m = Elevation.m)
 
 ## 2020 ##
 
