@@ -234,9 +234,10 @@ master2017 <- left_join(master2017,
                         by = c("Site_ID")) %>% 
   select(Site_ID:Floating_chamber, Chl_total = Chl_total.y, Chla:General_comments)
 
-# POM data #
+# POM data # -- pausing for answers on names, units, and dealing with 8ac/8ce
 pom_2017 <- read_csv("data/POM_2017.csv") %>% 
-  rename(Site_ID = Sample, )
+  rename(Site_ID = Sample, d15N_bulk_POM = d15NAIR, d13C_bulk_POM = d13CVPDB,
+         )
 
 # MC data # -- ready to merge
 mc_2017 <- read_csv("data/MC_2017.csv") %>% 
@@ -245,7 +246,9 @@ mc_2017 <- read_csv("data/MC_2017.csv") %>%
          !str_detect(Site_ID, "SD"),
          !str_detect(Site_ID, "CD")) %>% 
   mutate(MC_ug.L = replace(MC_ug.L, MC_ug.L == '<.2', 0.02),
-         Site_ID = toupper(str_sub(Site_ID, 2, nchar(Site_ID)))) 
+         Site_ID = toupper(str_sub(Site_ID, 2, nchar(Site_ID)))) %>% 
+  group_by(Site_ID) %>% 
+  dplyr::summarise(MC_ug.L = mean(as.numeric(MC_ug.L), na.rm = TRUE))
 
 # Elevation # -- ready to merge
 elevation_2017 <- read_csv("data/elevation_2017.csv") %>% 
