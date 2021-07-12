@@ -219,25 +219,26 @@ master2020 <- master2020 %>%
 # Chl data #
 # read in chl total data from 2017
 chl_total2017 <- read.csv("data/chl_2017.csv", 
-                          na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!"))
-
-# average values per sample
-chl_total2017 <- chl_total2017 %>% 
+                          na = c("", "NA", "#N/A", "#VALUE!", "#DIV/0!")) %>% 
   group_by(Site_ID) %>% 
   arrange(Site_ID) %>% 
   summarise(across(ChlA.ug.L:ChlTotal.ug.L, mean)) %>% 
-  filter(Site_ID != '54A?')
-
-# join 2017 chl total with master2017
-master2017 <- left_join(master2017, 
-                        select(chl_total2017, Site_ID, Chl_total = ChlTotal.ug.L),
-                        by = c("Site_ID")) %>% 
-  select(Site_ID:Floating_chamber, Chl_total = Chl_total.y, Chla:General_comments)
+  filter(Site_ID != '54A?') %>% 
+  select(Site_ID, Chl_total = ChlTotal.ug.L)
 
 # POM data # -- pausing for answers on names, units, and dealing with 8ac/8ce
 pom_2017 <- read_csv("data/POM_2017.csv") %>% 
   rename(Site_ID = Sample, d15N_bulk_POM = d15NAIR, d13C_bulk_POM = d13CVPDB,
-         )
+         ugN_bulk_POM = mgN, ugC_bulk_POM = mgC, PercentN_bulk_POM = `%N`,
+         PercentC_bulk_POM = `%C`, C_N_POM = `C/N`) %>% 
+  mutate(Site_ID = replace(Site_ID, Site_ID == 'CD July 12', '14a')) %>%
+  mutate(Site_ID = toupper(Site_ID)) %>% 
+  filter(Site_ID != '8AC', Site_ID != '8CE', 
+         !str_detect(Site_ID, "SD"), !str_detect(Site_ID, "CD")) %>% 
+  select(Site_ID, d15N_bulk_POM, d13C_bulk_POM, ugN_bulk_POM, ugC_bulk_POM,
+         PercentN_bulk_POM, PercentC_bulk_POM, C_N_POM) %>% 
+  group_by(Site_ID) %>% 
+  summarise(across(.fns = mean))
 
 # MC data # -- ready to merge
 mc_2017 <- read_csv("data/MC_2017.csv") %>% 
@@ -248,11 +249,23 @@ mc_2017 <- read_csv("data/MC_2017.csv") %>%
   mutate(MC_ug.L = replace(MC_ug.L, MC_ug.L == '<.2', 0.02),
          Site_ID = toupper(str_sub(Site_ID, 2, nchar(Site_ID)))) %>% 
   group_by(Site_ID) %>% 
-  dplyr::summarise(MC_ug.L = mean(as.numeric(MC_ug.L), na.rm = TRUE))
+  summarise(MC_ug.L = mean(as.numeric(MC_ug.L), na.rm = TRUE))
 
 # Elevation # -- ready to merge
 elevation_2017 <- read_csv("data/elevation_2017.csv") %>% 
   select(Site_ID, Elevation_m = Elevation.m)
+
+# join 2017 data with master2017
+master2017 <- left_join(select(master2017, -Chl_total, -MC_ug.L, -Elevation_m,
+                               -d15N_bulk_POM:-C_N_POM), 
+                        chl_total2017) %>% 
+  left_join(mc_2017) %>% 
+  left_join(elevation_2017) %>% 
+  left_join(pom_2017) %>% 
+  select(Site_ID:Floating_chamber, Chl_total, Chla:Alk_mg.L, MC_ug.L, 
+         pCO2:Sediment_C_N_org, d15N_bulk_POM:C_N_POM, d2H:Rn_dpm.L,
+         Elevation_m, Area_m2:General_comments)
+
 
 ## 2020 ##
 
