@@ -20,7 +20,6 @@ master2017 <- read_csv("data/dugout_master2017.csv",
 # make some quick fixes to the dataframe (from dugouts_2017_complete.R)
 master2017 <- master2017[-(103:104),] # remove last two columns of NAs
 master2017[5, 4] <- "24-Jul-17" # reassign date value that includes year
-master2017 <- master2017[-(2:3),] # remove sorting and site name columns
 
 # 2018 data
 master2018 <- read_csv("data/dugout_master2018.csv",
@@ -213,7 +212,6 @@ master2020 <- master2020 %>%
 
 # ADDING IN DATA #--------------------------------------------------------------
 
-
 ## 2017 ##
 
 # Chl data #
@@ -226,7 +224,7 @@ chl_total2017 <- read.csv("data/chl_2017.csv",
   filter(Site_ID != '54A?') %>% 
   select(Site_ID, Chl_total = ChlTotal.ug.L)
 
-# POM data # -- pausing for answers on names, units, and dealing with 8ac/8ce
+# POM data # 
 pom_2017 <- read_csv("data/POM_2017.csv") %>% 
   rename(Site_ID = Sample, d15N_bulk_POM = d15NAIR, d13C_bulk_POM = d13CVPDB,
          ugN_bulk_POM = mgN, ugC_bulk_POM = mgC, PercentN_bulk_POM = `%N`,
@@ -240,7 +238,7 @@ pom_2017 <- read_csv("data/POM_2017.csv") %>%
   group_by(Site_ID) %>% 
   summarise(across(.fns = mean))
 
-# MC data # -- ready to merge
+# MC data # 
 mc_2017 <- read_csv("data/MC_2017.csv") %>% 
   rename(Site_ID = Name, MC_ug.L = `[MC] ppb`) %>% 
   filter(MC_ug.L != ">2", MC_ug.L != "CV % Off", MC_ug.L != "CV % off",
@@ -251,7 +249,7 @@ mc_2017 <- read_csv("data/MC_2017.csv") %>%
   group_by(Site_ID) %>% 
   summarise(MC_ug.L = mean(as.numeric(MC_ug.L), na.rm = TRUE))
 
-# Elevation # -- ready to merge
+# Elevation # 
 elevation_2017 <- read_csv("data/elevation_2017.csv") %>% 
   select(Site_ID, Elevation_m = Elevation.m)
 
@@ -266,6 +264,20 @@ master2017 <- left_join(select(master2017, -Chl_total, -MC_ug.L, -Elevation_m,
          pCO2:Sediment_C_N_org, d15N_bulk_POM:C_N_POM, d2H:Rn_dpm.L,
          Elevation_m, Area_m2:General_comments)
 
+## 2018 ## --  double-check, but should be good
+
+sb_2018 <- read_csv("data/shakeybottle_2018.csv") %>% 
+  mutate(Date = lubridate::dmy(Date)) %>% 
+  filter(Sample == '1A' | Sample == '2A') %>% # checked NAs, they are fine
+  select(Site_ID:Temp_out) %>% 
+  pivot_longer(Temp_in:Temp_out, names_to = "temp_type", values_to = "temp") %>% 
+  pivot_wider(names_from = c(temp_type, Sample), values_from = temp) %>% 
+  rename(Bottle_temp_in = Temp_in_1A, Bottle_temp_out = Temp_out_1A,
+         Bottle2_temp_in = Temp_in_2A, Bottle2_temp_out = Temp_out_2A)
+
+master2018 <- left_join(select(master2018, -Bottle_temp_in:-Bottle2_temp_out),
+                        sb_2018) %>% 
+  select(Site_ID:Sediment_depth, Bottle_temp_in:Bottle2_temp_out, Tows:General_comments)
 
 ## 2020 ##
 
