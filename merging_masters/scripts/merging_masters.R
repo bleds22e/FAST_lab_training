@@ -266,6 +266,7 @@ master2017 <- left_join(select(master2017, -Chl_total, -MC_ug.L, -Elevation_m,
 
 ## 2018 ## --  double-check, but should be good
 
+# shaky bottles
 sb_2018 <- read_csv("data/shakeybottle_2018.csv") %>% 
   mutate(Date = lubridate::dmy(Date)) %>% 
   filter(Sample == '1A' | Sample == '2A') %>% # checked NAs, they are fine
@@ -275,9 +276,17 @@ sb_2018 <- read_csv("data/shakeybottle_2018.csv") %>%
   rename(Bottle_temp_in = Temp_in_1A, Bottle_temp_out = Temp_out_1A,
          Bottle2_temp_in = Temp_in_2A, Bottle2_temp_out = Temp_out_2A)
 
+# float chambers
+float_2018 <- read_csv("data/floatingchamber_2018.csv") %>% 
+  select(Site_ID = 'Dugout ID', Date) %>% 
+  mutate(Date = lubridate::dmy(Date),
+         Site_ID = replace(Site_ID, Site_ID == '23', '23A'))
+
 master2018 <- left_join(select(master2018, -Bottle_temp_in:-Bottle2_temp_out),
                         sb_2018) %>% 
-  select(Site_ID:Sediment_depth, Bottle_temp_in:Bottle2_temp_out, Tows:General_comments)
+  select(Site_ID:Sediment_depth, Bottle_temp_in:Bottle2_temp_out, Tows:General_comments) %>% 
+  mutate(Floating_chamber = ifelse(Site_ID %in% as.vector(float_2018$Site_ID) & Date %in% as.vector(float_2018$Date),
+                                   'Y', 'N'))
 
 ## 2020 ##
 
