@@ -87,10 +87,9 @@ master2017 <- master2017 %>%
          B_F_min = b.f.min, Rn_dpm.L, Elevation_m, Area_m2 = Area.m, Perimeter, 
          Volume_m3 = Volume.m3, SI, General_comments = `General Comments`) %>% 
   # calculate the columns missing columns that we can
-  mutate(Date = lubridate::dmy(Date))
-# mutate(DIN_ug.N.L = (NH3_mg.N.L*1000) + Nitrate_Nitrite_ug.N.L)
-#   - mutate function not working because Nitrate_Nitrite_ug.N.L column is a 
-#     character column due to "<LOD" values
+  mutate(Date = lubridate::dmy(Date),
+         Site_ID = ifelse(is.na(str_extract(Site_ID, "[aA-zZ]+")),
+                          paste0(Site_ID, 'A'), Site_ID))
 
 # 2018 data  
 master2018 <- master2018 %>% 
@@ -134,7 +133,9 @@ master2018 <- master2018 %>%
          = Landuse, Age_years = Age.years, NP_ratio2, B_F_max = b.f.max, B_F_min
          = b.f.min, Rn_dpm.L = Rn.dpm.L, Elevation_m = elevation.m, Area_m2 = 
          Area.m2, Perimeter, Volume_m3, SI, General_comments = `General Comments`) %>% 
-  mutate(Date = lubridate::dmy(Date))
+  mutate(Date = lubridate::dmy(Date),
+         Site_ID = ifelse(is.na(str_extract(Site_ID, "[aA-zZ]+")),
+                          paste0(Site_ID, 'A'), Site_ID))
 
 # 2019 data
 master2019 <- master2019 %>% 
@@ -175,7 +176,9 @@ master2019 <- master2019 %>%
          Land_use = Landuse, Age_years = Age.years, NP_ratio2 = NP.ratio, B_F_max
          = b.f.max, B_F_min = b.f.min, Rn_dpm.L = Rn.dpm.L, Elevation_m, Area_m2, 
          Perimeter, Volume_m3, SI, General_comments = `General Comments`) %>% 
-  mutate(Date = lubridate::dmy(Date))
+  mutate(Date = lubridate::dmy(Date),
+         Site_ID = ifelse(is.na(str_extract(Site_ID, "[aA-zZ]+")),
+                          paste0(Site_ID, 'A'), Site_ID))
 
 # 2020 data
 master2020 <- master2020 %>% 
@@ -208,7 +211,9 @@ master2020 <- master2020 %>%
          YSI_atm, Core_length_cm, Sediment_depth, Bottle_temp_in, Bottle_temp_out
          = `Shakey Bottle 1 temp out`, Bottle2_temp_in, Bottle2_temp_out = 
          `Shakey Bottle 2 temp out`, Tows, Floating_chamber:General_comments) %>% 
-  mutate(Date = lubridate::dmy(Date))
+  mutate(Date = lubridate::dmy(Date),
+         Site_ID = ifelse(is.na(str_extract(Site_ID, "[aA-zZ]+")),
+                          paste0(Site_ID, 'A'), Site_ID))
 
 # ADDING IN DATA #--------------------------------------------------------------
 
@@ -222,6 +227,8 @@ chl_total2017 <- read.csv("data/chl_2017.csv",
   arrange(Site_ID) %>% 
   summarise(across(ChlA.ug.L:ChlTotal.ug.L, mean)) %>% 
   filter(Site_ID != '54A?') %>% 
+  mutate(Site_ID = ifelse(is.na(str_extract(Site_ID, "[aA-zZ]+")),
+                          paste0(Site_ID, 'A'), Site_ID)) %>% 
   select(Site_ID, Chl_total = ChlTotal.ug.L)
 
 # POM data # 
@@ -229,8 +236,12 @@ pom_2017 <- read_csv("data/POM_2017.csv") %>%
   rename(Site_ID = Sample, d15N_bulk_POM = d15NAIR, d13C_bulk_POM = d13CVPDB,
          ugN_bulk_POM = mgN, ugC_bulk_POM = mgC, PercentN_bulk_POM = `%N`,
          PercentC_bulk_POM = `%C`, C_N_POM = `C/N`) %>% 
-  mutate(Site_ID = replace(Site_ID, Site_ID == 'CD July 12', '14a')) %>%
-  mutate(Site_ID = toupper(Site_ID)) %>% 
+  filter(!is.na(Site_ID)) %>% 
+  mutate(Site_ID = replace(Site_ID, Site_ID == 'CD July 12', '14a'),
+         Site_ID = replace(Site_ID, Site_ID == '71', '7I')) %>%
+  mutate(Site_ID = toupper(Site_ID),
+         Site_ID = ifelse(is.na(str_extract(Site_ID, "[aA-zZ]+")),
+                          paste0(Site_ID, 'A'), Site_ID)) %>% 
   filter(Site_ID != '8AC', Site_ID != '8CE', 
          !str_detect(Site_ID, "SD"), !str_detect(Site_ID, "CD")) %>% 
   select(Site_ID, d15N_bulk_POM, d13C_bulk_POM, ugN_bulk_POM, ugC_bulk_POM,
@@ -245,13 +256,19 @@ mc_2017 <- read_csv("data/MC_2017.csv") %>%
          !str_detect(Site_ID, "SD"),
          !str_detect(Site_ID, "CD")) %>% 
   mutate(MC_ug.L = replace(MC_ug.L, MC_ug.L == '<.2', 0.02),
-         Site_ID = toupper(str_sub(Site_ID, 2, nchar(Site_ID)))) %>% 
+         Site_ID = toupper(str_sub(Site_ID, 2, nchar(Site_ID))),
+         Site_ID = replace(Site_ID, Site_ID == '71', '7I'),
+         Site_ID = replace(Site_ID, Site_ID == '65B', '56B'),
+         Site_ID = ifelse(is.na(str_extract(Site_ID, "[aA-zZ]+")),
+                          paste0(Site_ID, 'A'), Site_ID)) %>% 
   group_by(Site_ID) %>% 
   summarise(MC_ug.L = mean(as.numeric(MC_ug.L), na.rm = TRUE))
 
 # Elevation # 
 elevation_2017 <- read_csv("data/elevation_2017.csv") %>% 
-  select(Site_ID, Elevation_m = Elevation.m)
+  select(Site_ID, Elevation_m = Elevation.m) %>% 
+  mutate(Site_ID = ifelse(is.na(str_extract(Site_ID, "[aA-zZ]+")),
+                          paste0(Site_ID, 'A'), Site_ID))
 
 # join 2017 data with master2017
 master2017 <- left_join(select(master2017, -Chl_total, -MC_ug.L, -Elevation_m,
@@ -260,15 +277,17 @@ master2017 <- left_join(select(master2017, -Chl_total, -MC_ug.L, -Elevation_m,
   left_join(mc_2017) %>% 
   left_join(elevation_2017) %>% 
   left_join(pom_2017) %>% 
-  select(Site_ID:Floating_chamber, Chl_total, Chla:Alk_mg.L, MC_ug.L, 
+  select(Site_ID:Floating_chamber, Chl_total, Chla:Chloride_mg.L, MC_ug.L, 
          pCO2:Sediment_C_N_org, d15N_bulk_POM:C_N_POM, d2H:Rn_dpm.L,
          Elevation_m, Area_m2:General_comments)
 
-## 2018 ## --  double-check, but should be good
+## 2018 ##
 
 # shaky bottles
 sb_2018 <- read_csv("data/shakeybottle_2018.csv") %>% 
-  mutate(Date = lubridate::dmy(Date)) %>% 
+  mutate(Date = lubridate::dmy(Date),
+         Site_ID = ifelse(is.na(str_extract(Site_ID, "[aA-zZ]+")),
+                          paste0(Site_ID, 'A'), Site_ID)) %>% 
   filter(Sample == '1A' | Sample == '2A') %>% # checked NAs, they are fine
   select(Site_ID:Temp_out) %>% 
   pivot_longer(Temp_in:Temp_out, names_to = "temp_type", values_to = "temp") %>% 
@@ -291,21 +310,36 @@ alk_etc_2018 <- read_csv("data/cl_alk_so4_2018.csv") %>%
   mutate(Day = ifelse(str_length(Day) == 1, paste0("0", Day), Day)) %>% 
   unite("Date", Day, Month, Year, sep = "-") %>% 
   mutate(SO4_mg.L = as.numeric(SO4_mg.L),
-         Date = lubridate::dmy(Date))
-## what about values with P in front? also still NEED TO MERGE INTO 2018!
+         Date = lubridate::dmy(Date),
+         Site_ID = replace(Site_ID, Site_ID == '5A', '56A'),
+         # if Site_ID is just a number (no letters), add the letter A
+         Site_ID = ifelse(is.na(str_extract(Site_ID, "[aA-zZ]+")),
+                          paste0(Site_ID, 'A'), Site_ID)) %>% 
+  # remove sites that start with P and sites with hours 
+  filter(str_sub(Site_ID, 1, 1) != "P", is.na(Hours)) %>% 
+  select(-Hours)
 
 # float chambers
 float_2018 <- read_csv("data/floatingchamber_2018.csv") %>% 
   select(Site_ID = 'Dugout ID', Date) %>% 
   mutate(Date = lubridate::dmy(Date),
-         Site_ID = replace(Site_ID, Site_ID == '23', '23A'))
+         Site_ID = ifelse(is.na(str_extract(Site_ID, "[aA-zZ]+")),
+                          paste0(Site_ID, 'A'), Site_ID))
 
 # merge into 2018
-master2018 <- left_join(select(master2018, -Bottle_temp_in:-Bottle2_temp_out),
+master2018 <- left_join(select(master2018, 
+                               -Bottle_temp_in:-Bottle2_temp_out, 
+                               -SO4_mg.L:-Chloride_mg.L),
                         sb_2018) %>% 
-  select(Site_ID:Sediment_depth, Bottle_temp_in:Bottle2_temp_out, Tows:General_comments) %>% 
-  mutate(Floating_chamber = ifelse(Site_ID %in% as.vector(float_2018$Site_ID) & Date %in% as.vector(float_2018$Date),
+  left_join(alk_etc_2018) %>% 
+  select(Site_ID:Sediment_depth, Bottle_temp_in:Bottle2_temp_out, 
+         Tows:Surface_TN_TP, SO4_mg.L, Alk_mg.L, Chloride_mg.L,
+         MC_ug.L:General_comments) %>% 
+  mutate(Floating_chamber = ifelse(Site_ID %in% as.vector(float_2018$Site_ID) & 
+                                     Date %in% as.vector(float_2018$Date),
                                    'Y', 'N'))
+
+
 
 ## 2020 ##
 
@@ -326,7 +360,9 @@ carbon2020 <- carbon2020 %>%
   # if Day has only 1 character, add a 0 in front so lubridate understands
   mutate(Day = ifelse(str_length(Day) == 1, paste0("0", Day), Day)) %>% 
   unite("Date", Year, Day, Month, sep = "-") %>% 
-  mutate(Date = lubridate::ydm(Date)) %>% 
+  mutate(Date = lubridate::ydm(Date),
+         Site_ID = ifelse(is.na(str_extract(Site_ID, "[aA-zZ]+")),
+                          paste0(Site_ID, 'A'), Site_ID)) %>% 
   # make a new column to indicate if samples were labeled "deep"
   separate(Site_ID, c("Site_ID", "Deep"), sep = "-")
 
@@ -336,7 +372,9 @@ waterchem2020 <- waterchem2020 %>%
   drop_na() %>% 
   mutate(Site_ID = str_sub(Sample, 2, nchar(Sample)),
          Sample = str_sub(Sample, 1, 1),
-         Site_ID = replace(Site_ID, Site_ID == '57C', '56C')) %>% 
+         Site_ID = replace(Site_ID, Site_ID == '57C', '56C'),
+         Site_ID = ifelse(is.na(str_extract(Site_ID, "[aA-zZ]+")),
+                          paste0(Site_ID, 'A'), Site_ID)) %>% 
   separate(Site_ID, c("Site_ID", "Deep"), sep = "-")
 
 # join waterchem2020 to carbon2020
