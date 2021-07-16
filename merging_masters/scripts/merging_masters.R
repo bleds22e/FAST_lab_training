@@ -339,7 +339,13 @@ master2018 <- left_join(select(master2018,
                                      Date %in% as.vector(float_2018$Date),
                                    'Y', 'N'))
 
+## 2019 ##
 
+pom_2019 <- read_csv("data/POM_2019.csv")
+
+sb_2019 <- read_csv("data/shakeybottle_2019.csv")
+
+alk_etc_2019 <- read_csv("data/ALK_CHL_SO4_2019.csv")
 
 ## 2020 ##
 
