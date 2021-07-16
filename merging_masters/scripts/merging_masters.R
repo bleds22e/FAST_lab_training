@@ -54,7 +54,7 @@ master2017 <- master2017 %>%
              Deep_DIC_uM = NA, Deep_DOC_mg.L = NA, Deep_DOC_uM = NA, MC_ug.L = NA, 
              d15N_bulk_POM = NA, d13C_bulk_POM = NA, ugN_bulk_POM = NA, 
              ugC_bulk_POM = NA, PercentN_bulk_POM = NA, PercentC_bulk_POM = NA, 
-             C_N_POM = NA, Rn_dpm.L = NA, Elevation_m = NA) %>%
+             C_N_POM = NA, Rn_dpm.L = NA, Elevation_m = NA, Chloride_mg.L = NA) %>%
   # order columns and rename all the columns with standard format
   select(Site_ID, Date, Time, Latitude = latitude, Longitude = longitude, 
          Air_temp, Cloud_perc = `Cloud (%)`, Wind_km.hr, Field_team, Secchi_m = 
@@ -76,7 +76,7 @@ master2017 <- master2017 %>%
          Surface_NP_ratio = NP_ratio, Surface_TN_TP = TN_TP, Deep_NH3_mg.N.L, 
          Deep_SRP_mg.P.L, Deep_Nitrate_Nitrite_ug.N.L, Deep_TP_mg.P.L, 
          Deep_TN_ug.N.L, Deep_DIC_mg.L, Deep_DIC_uM, Deep_DOC_mg.L, 
-         Deep_DOC_uM,  SO4_mg.L = SO4.mg.L, Alk_mg.L = Alk.mg.L, 
+         Deep_DOC_uM,  SO4_mg.L = SO4.mg.L, Alk_mg.L = Alk.mg.L, Chloride_mg.L,
          MC_ug.L, pCO2, CO2_uM = CO2.uM, CO2_uM_error = CO2.uM.error, pCH4, 
          CH4_uM = CH4.uM, CH4_uM_error = CH4.uM.error, pN2O, N2O_nM = N2O.nM, 
          N2O_nM_error = N2O.nM.error, d15N_bulk:PercentC_bulk, Sediment_C_N = 
@@ -105,7 +105,7 @@ master2018 <- master2018 %>%
              d15N_org = NA, d13C_org = NA, mgN_org = NA, mgC_org = NA, PercentN_org
              = NA, PercentC_org = NA, Sediment_C_N_org = NA, Regime = NA, d_excess
              = NA, delI18O = NA, delI2H = NA, Inflow = NA, NP_ratio2 = NA, 
-             Perimeter = NA, Volume_m3 = NA, SI = NA, DIN_ug.N.L = NA) %>% 
+             Perimeter = NA, Volume_m3 = NA, SI = NA, DIN_ug.N.L = NA, Chloride_mg.L = NA) %>% 
   select(Site_ID, Date, Time, Latitude = latitude, Longitude = longitude, 
          Air_temp, Cloud_perc = `Cloud (%)`, Wind_km.hr, Field_team, Secchi_m = 
          Secchi.m, Depth_m = Depth.m, Max_depth_m = Max_depth.m,
@@ -124,7 +124,7 @@ master2018 <- master2018 %>%
          Deep_SRP_mg.P.L, Deep_Nitrate_Nitrite_ug.N.L, Deep_TP_mg.P.L, 
          Deep_TN_ug.N.L, Deep_DIC_mg.L, Deep_DIC_uM, Surface_DIN_ug.N.L = DIN.ug.N.L, Deep_DOC_mg.L, 
          Deep_DOC_uM, Surface_NP_ratio = NP_ratio, Surface_TN_TP, SO4_mg.L, Alk_mg.L, 
-         MC_ug.L = MC.ug.L, pCO2, CO2_uM = CO2.uM, CO2_uM_error = CO2.uM.error, 
+         Chloride_mg.L, MC_ug.L = MC.ug.L, pCO2, CO2_uM = CO2.uM, CO2_uM_error = CO2.uM.error, 
          pCH4, CH4_uM = CH4.uM, CH4_uM_error = CH4.uM.error, pN2O, N2O_nM = N2O.nM, 
          N2O_nM_error = N2O.nM.error, d15N_bulk, d13C_bulk, mgN_bulk, mgC_bulk,
          PercentN_bulk, PercentC_bulk, Sediment_C_N, d15N_org, d13C_org, mgN_org, 
@@ -146,7 +146,7 @@ master2019 <- master2019 %>%
              d15N_bulk_POM = NA, d13C_bulk_POM = NA, ugN_bulk_POM = NA, ugC_bulk_POM = NA, 
              PercentN_bulk_POM = NA, PercentC_bulk_POM = NA, C_N_POM = NA, d_excess = NA, 
              delI18O = NA, delI2H = NA, Inflow = NA, Elevation_m = NA, Area_m2 = NA, 
-             Perimeter = NA, Volume_m3 = NA, SI = NA) %>% 
+             Perimeter = NA, Volume_m3 = NA, SI = NA, Chloride_mg.L = NA) %>% 
   select(Site_ID = Site, Date, Time, Latitude = latitude, Longitude = longitude,
          Air_temp, Cloud_perc = `Cloud (%)`, Wind_km.hr, Field_team, Secchi_m = 
          Secchi.m, Depth_m = Depth.m, Max_depth_m = Max_depth.m,
@@ -166,8 +166,8 @@ master2019 <- master2019 %>%
          Deep_SRP_mg.P.L, Deep_Nitrate_Nitrite_ug.N.L, Deep_TP_mg.P.L, 
          Deep_TN_ug.N.L, Deep_DIC_mg.L, Deep_DIC_uM, Surface_DIN_ug.N.L, Deep_DOC_mg.L, 
          Deep_DOC_uM, Surface_NP_ratio = NP_ratio, Surface_TN_TP, SO4_mg.L, Alk_mg.L, 
-         MC_ug.L, pCO2, CO2_uM = CO2.uM, CO2_uM_error = CO2.uM.error, pCH4, 
-         CH4_uM = CH4.uM, CH4_uM_error
+         Chloride_mg.L, MC_ug.L, pCO2, CO2_uM = CO2.uM, CO2_uM_error = CO2.uM.error, 
+         pCH4, CH4_uM = CH4.uM, CH4_uM_error
          = CH4.uM.error, pN2O, N2O_nM = N2O.nM, N2O_nM_error = N2O.nM.error, 
          d15N_bulk:PercentC_bulk, Sediment_C_N = sediment_C_N, d15N_org:PercentC_org,
          Sediment_C_N_org, d15N_bulk_POM:C_N_POM, d2H:Regime, Water_source = 
@@ -184,7 +184,7 @@ master2020 <- master2020 %>%
              Floating_chamber = NA, Chl_total = NA, Chla = NA, Surface_DIC_uM = NA, 
              Surface_DOC_uM = NA, Deep_DIC_uM = NA, Surface_DIN_ug.N.L
              = NA, Deep_DOC_uM = NA, Surface_NP_ratio = NA, Surface_TN_TP = NA, 
-             SO4_mg.L = NA, Alk_mg.L = NA, MC_ug.L = NA, pCO2 = NA, CO2_uM = NA,
+             SO4_mg.L = NA, Alk_mg.L = NA, Chloride_mg.L = NA, MC_ug.L = NA, pCO2 = NA, CO2_uM = NA,
              CO2_uM_error = NA, pCH4 = NA, CH4_uM = NA, CH4_uM_error = NA, pN2O 
              = NA, N2O_nM = NA, N2O_nM_error = NA, d15N_bulk = NA, d13C_bulk = NA,
              mgN_bulk = NA, mgC_bulk = NA,PercentN_bulk = NA, PercentC_bulk = NA,
@@ -276,12 +276,31 @@ sb_2018 <- read_csv("data/shakeybottle_2018.csv") %>%
   rename(Bottle_temp_in = Temp_in_1A, Bottle_temp_out = Temp_out_1A,
          Bottle2_temp_in = Temp_in_2A, Bottle2_temp_out = Temp_out_2A)
 
+# Chlorida, Alk, and SO4
+alk_etc_2018 <- read_csv("data/cl_alk_so4_2018.csv") %>% 
+  select(Site_ID = SampleID, Alk_mg.L = `Alkalinity (mg/L)`, 
+         Chloride_mg.L = `Chloride (mg/L)`, SO4_mg.L = `SO4 (mg/L)`) %>% 
+  # separate into only 2 columns so hours and date go into one column
+  separate(Site_ID, c("Site_ID", "Date"), "-", extra = "merge") %>% 
+  # separate the Date column into hours and dates, filling hours with NAs if empty
+  separate(Date, c("Hours", "Date"), "-", fill = "left") %>% 
+  mutate(Year = 2018,
+         Month = str_extract(Date, "[aA-zZ]+"), # pull out letters from Date
+         Day = str_extract(Date, "[0-9]+")) %>% # pull out numbers from Date
+  # if Day has only 1 character, add a 0 in front so lubridate understands
+  mutate(Day = ifelse(str_length(Day) == 1, paste0("0", Day), Day)) %>% 
+  unite("Date", Day, Month, Year, sep = "-") %>% 
+  mutate(SO4_mg.L = as.numeric(SO4_mg.L),
+         Date = lubridate::dmy(Date))
+## what about values with P in front? also still NEED TO MERGE INTO 2018!
+
 # float chambers
 float_2018 <- read_csv("data/floatingchamber_2018.csv") %>% 
   select(Site_ID = 'Dugout ID', Date) %>% 
   mutate(Date = lubridate::dmy(Date),
          Site_ID = replace(Site_ID, Site_ID == '23', '23A'))
 
+# merge into 2018
 master2018 <- left_join(select(master2018, -Bottle_temp_in:-Bottle2_temp_out),
                         sb_2018) %>% 
   select(Site_ID:Sediment_depth, Bottle_temp_in:Bottle2_temp_out, Tows:General_comments) %>% 
