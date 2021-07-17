@@ -341,7 +341,24 @@ master2018 <- left_join(select(master2018,
 
 ## 2019 ##
 
-pom_2019 <- read_csv("data/POM_2019.csv")
+# POM -- almost working, but some sites have mutliple dates?
+# check dates; also use setdiff() to check site_IDs
+pom_2019 <- read_csv("data/POM_2019.csv") %>% 
+  select(Site_ID = Sample, d15N_bulk_POM = d15NAIR, d13C_bulk_POM = d13CVPDB,
+         ugN_bulk_POM = mgN, ugC_bulk_POM = mgC, PercentN_bulk_POM = `%N`,
+         PercentC_bulk_POM = `%C`, C_N_POM = `C/N`) %>% 
+  separate(Site_ID, c("Site_ID", "Extra"), sep = " ", extra = "merge") %>% 
+  separate(Extra, c("Extra", "Month", "Day"), sep = , fill = "left") %>% 
+  mutate(Day = replace(Day, Day == '209', '09'),
+         Year = 2019) %>% 
+  unite(Date, Month, Day, Year, sep = "-") %>% 
+  filter(str_sub(Site_ID, 1, 1) == "D", is.na(Extra), Site_ID != 'DIL') %>% 
+  mutate(Date = lubridate::mdy(Date),
+         Site_ID = str_sub(Site_ID, 2, length(Site_ID))) %>% 
+  select(-Extra) %>% 
+  group_by(Site_ID, Date) %>% 
+  summarise(across(.cols = d15N_bulk_POM:C_N_POM, .fns = ~ mean(., na.rm = TRUE)))
+
 
 sb_2019 <- read_csv("data/shakeybottle_2019.csv")
 
