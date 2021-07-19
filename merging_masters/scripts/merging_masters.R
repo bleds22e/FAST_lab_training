@@ -568,18 +568,18 @@ grand_master <- bind_rows(master2017,
                           master2019,
                           master2020)
 
-#write_csv(grand_master, "data/grand_master.csv")
+write_csv(grand_master, "data/grand_master.csv")
 
 # END #-------------------------------------------------------------------------
 
-grand_master <- read_csv("data/grand_master.csv")
-
-grand_master_NA <- grand_master %>%
-  mutate(Year = as.factor(lubridate::year(Date))) %>% 
-  group_by(Year) %>% 
-  summarise_all(funs(sum(is.na(.)))) %>% 
-  pivot_longer(Site_ID:General_comments,
-               names_to = "Column", values_to = "NA_count") %>% 
-  filter(NA_count > 40)
+# grand_master <- read_csv("data/grand_master.csv")
+# 
+# grand_master_NA <- grand_master %>%
+#   mutate(Year = as.factor(lubridate::year(Date))) %>% 
+#   group_by(Year) %>% 
+#   summarise_all(funs(sum(is.na(.)))) %>% 
+#   pivot_longer(Site_ID:General_comments,
+#                names_to = "Column", values_to = "NA_count") %>% 
+#   filter(NA_count > 40)
 
             
