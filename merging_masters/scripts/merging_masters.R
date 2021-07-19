@@ -65,8 +65,8 @@ master2017 <- master2017 %>%
          Surface_pH, Deep_temp = Deep_Temp, Deep_DO_sat = Deep_DO.sat, 
          Deep_DO_mg.L = Deep_DO.mg.L, Deep_cond = Deep_Cond, Deep_sal_ppt = 
          Deep_Sal.ppt, Deep_pH, TDS_mg.L = TDS.mg.L, YSI_atm, Core_length_cm = 
-         `Core_length (cm)`, Sediment_depth, Bottle_temp_in = Bottle_Temp_In, 
-         Bottle_temp_out, Bottle2_temp_in, Bottle2_temp_out, Tows, 
+         `Core_length (cm)`, Sediment_depth, Bottle1_temp_in = Bottle_Temp_In, 
+         Bottle1_temp_out = Bottle_temp_out, Bottle2_temp_in, Bottle2_temp_out, Tows, 
          Floating_chamber = `Floating_chamberY/N`, Chl_total, Chla, 
          Surface_NH3_mg.N.L = NH3.mg.N.L, Surface_SRP_mg.P.L = SRP.mg.P.L, 
          Surface_Nitrate_Nitrite_ug.N.L = Nitrate_Nitrite.ug.N.L, 
@@ -83,7 +83,7 @@ master2017 <- master2017 %>%
          sediment_C_N, d15N_org:PercentC_org, Sediment_C_N_org = `sediment_C_Norg`, 
          d15N_bulk_POM:C_N_POM, d2H:Regime, Water_source = Water_Source, 
          Residence_time = RT, Water_class, d_excess:Inflow, Land_use = Landuse, 
-         Age_years = Age.years, NP_ratio2 = NP.ratio, B_F_max = b.f.max, 
+         Age_years = Age.years, B_F_max = b.f.max, 
          B_F_min = b.f.min, Rn_dpm.L, Elevation_m, Area_m2 = Area.m, Perimeter, 
          Volume_m3 = Volume.m3, SI, General_comments = `General Comments`) %>% 
   # calculate the columns missing columns that we can
@@ -93,8 +93,8 @@ master2017 <- master2017 %>%
 
 # 2018 data  
 master2018 <- master2018 %>% 
-  add_column(Core_length_cm = NA, Sediment_depth = NA, Bottle_temp_in = NA, 
-             Bottle_temp_out = NA, Bottle2_temp_in = NA, Bottle2_temp_out = NA, 
+  add_column(Core_length_cm = NA, Sediment_depth = NA, Bottle1_temp_in = NA, 
+             Bottle1_temp_out = NA, Bottle2_temp_in = NA, Bottle2_temp_out = NA, 
              Tows = NA, Floating_chamber = NA, Deep_NH3_mg.N.L = NA, Deep_SRP_mg.P.L
              = NA, Deep_Nitrate_Nitrite_ug.N.L = NA, Deep_TP_mg.P.L = NA, 
              Deep_TN_ug.N.L = NA, Surface_TN_TP = NA, Deep_DIC_mg.L = NA, Deep_DIC_uM = NA, 
@@ -103,8 +103,8 @@ master2018 <- master2018 %>%
              PercentN_bulk = NA, PercentC_bulk = NA, Sediment_C_N = NA, 
              d15N_org = NA, d13C_org = NA, mgN_org = NA, mgC_org = NA, PercentN_org
              = NA, PercentC_org = NA, Sediment_C_N_org = NA, Regime = NA, d_excess
-             = NA, delI18O = NA, delI2H = NA, Inflow = NA, NP_ratio2 = NA, 
-             Perimeter = NA, Volume_m3 = NA, SI = NA, DIN_ug.N.L = NA, Chloride_mg.L = NA) %>% 
+             = NA, delI18O = NA, delI2H = NA, Inflow = NA, Perimeter = NA, 
+             Volume_m3 = NA, SI = NA, DIN_ug.N.L = NA, Chloride_mg.L = NA) %>% 
   select(Site_ID, Date, Time, Latitude = latitude, Longitude = longitude, 
          Air_temp, Cloud_perc = `Cloud (%)`, Wind_km.hr, Field_team, Secchi_m = 
          Secchi.m, Depth_m = Depth.m, Max_depth_m = Max_depth.m,
@@ -114,7 +114,7 @@ master2018 <- master2018 %>%
          Surface_pH, Deep_temp = Deep_Temp, Deep_DO_sat = Deep_DO.sat, Deep_DO_mg.L
          = Deep_DO.mg.L, Deep_cond = Deep_Cond, Deep_sal_ppt = Deep_Sal.ppt, 
          Deep_pH, TDS_mg.L = TDS.mg.L, YSI_atm, Core_length_cm, Sediment_depth, 
-         Bottle_temp_in, Bottle_temp_out, Bottle2_temp_in, Bottle2_temp_out, Tows,
+         Bottle1_temp_in, Bottle1_temp_out, Bottle2_temp_in, Bottle2_temp_out, Tows,
          Floating_chamber, Chl_total, Chla, Surface_NH3_mg.N.L = NH3.mg.N.L, 
          Surface_SRP_mg.P.L = SRP.mg.P.L, Surface_Nitrate_Nitrite_ug.N.L = 
          Nitrate_Nitrite.ug.N.L, Surface_TP_mg.P.L = TP.mg.P.L, Surface_TN_ug.N.L
@@ -130,7 +130,7 @@ master2018 <- master2018 %>%
          mgC_org, PercentN_org, PercentC_org, Sediment_C_N_org, d15N_bulk_POM:C_N_POM, 
          d2H, d18O, EtoI, Regime, Water_source = `Water Source`, Residence_time = 
          Residence_Time, Water_class, d_excess, delI18O, delI2H, Inflow, Land_use
-         = Landuse, Age_years = Age.years, NP_ratio2, B_F_max = b.f.max, B_F_min
+         = Landuse, Age_years = Age.years, B_F_max = b.f.max, B_F_min
          = b.f.min, Rn_dpm.L = Rn.dpm.L, Elevation_m = elevation.m, Area_m2 = 
          Area.m2, Perimeter, Volume_m3, SI, General_comments = `General Comments`) %>% 
   mutate(Date = lubridate::dmy(Date),
@@ -157,7 +157,7 @@ master2019 <- master2019 %>%
          Deep_temp = Deep_Temp, Deep_DO_sat = Deep_DO.sat, Deep_DO_mg.L = Deep_DO.mg.L, 
          Deep_cond = Deep_Cond, Deep_sal_ppt = Deep_Sal.ppt, Deep_pH, TDS_mg.L = 
          TDS.mg.L, YSI_atm, Core_length_cm = `Core_length (cm)`, Sediment_depth, 
-         Bottle_temp_in = Bottle_Temp_In, Bottle_temp_out, Bottle2_temp_in, 
+         Bottle1_temp_in = Bottle_Temp_In, Bottle1_temp_out = Bottle_temp_out, Bottle2_temp_in, 
          Bottle2_temp_out, Tows, Floating_chamber = `Floating_chamberY/N`, Chl_total, 
          Chla, Surface_NH3_mg.N.L = NH3.mg.N.L, Surface_SRP_mg.P.L = SRP.mg.P.L, 
          Surface_Nitrate_Nitrite_ug.N.L = Nitrate_Nitrite.ug.N.L, 
@@ -173,7 +173,7 @@ master2019 <- master2019 %>%
          d15N_bulk:PercentC_bulk, Sediment_C_N = sediment_C_N, d15N_org:PercentC_org,
          Sediment_C_N_org, d15N_bulk_POM:C_N_POM, d2H:Regime, Water_source = 
          `Water Source`, Residence_time = Residence_Time, Water_class, d_excess:Inflow,
-         Land_use = Landuse, Age_years = Age.years, NP_ratio2 = NP.ratio, B_F_max
+         Land_use = Landuse, Age_years = Age.years, B_F_max
          = b.f.max, B_F_min = b.f.min, Rn_dpm.L = Rn.dpm.L, Elevation_m, Area_m2, 
          Perimeter, Volume_m3, SI, General_comments = `General Comments`) %>% 
   mutate(Date = lubridate::dmy(Date),
@@ -183,7 +183,7 @@ master2019 <- master2019 %>%
 # 2020 data
 master2020 <- master2020 %>% 
   add_column(Field_team = NA, TDS_mg.L = NA, Core_length_cm = NA, Sediment_depth = 
-             NA, Bottle_temp_in = NA, Bottle2_temp_in = NA, Tows = NA, 
+             NA, Bottle1_temp_in = NA, Bottle2_temp_in = NA, Tows = NA, 
              Floating_chamber = NA, Chl_total = NA, Chla = NA, Surface_DIC_uM = NA, 
              Surface_DOC_uM = NA, Deep_DIC_uM = NA, Surface_DIN_ug.N.L
              = NA, Deep_DOC_uM = NA, Surface_NP_ratio = NA, Surface_TN_TP = NA, 
@@ -197,7 +197,7 @@ master2020 <- master2020 %>%
              = NA, PercentN_bulk_POM = NA, PercentC_bulk_POM = NA, C_N_POM = NA, 
              d2H = NA, d18O = NA, EtoI = NA, Regime = NA, Water_source = NA, 
              Residence_time = NA, Water_class = NA, d_excess = NA, delI18O = NA, 
-             delI2H = NA, Inflow = NA, Land_use = NA, Age_years = NA, NP_ratio2 = NA,
+             delI2H = NA, Inflow = NA, Land_use = NA, Age_years = NA, 
              B_F_max = NA, B_F_min = NA, Rn_dpm.L = NA, Elevation_m = NA, Area_m2
              = NA, Perimeter = NA, Volume_m3 = NA, SI = NA, General_comments = NA) %>% 
   select(Site_ID:Time, Latitude = latitude, Longitude = longitude, Air_temp, 
@@ -208,7 +208,7 @@ master2020 <- master2020 %>%
          Surface_Cond, Surface_sal_ppt = Surface_Sal.ppt, Surface_pH, Deep_temp 
          = Deep_Temp, Deep_DO_sat = Deep_DO.sat, Deep_DO_mg.L = Deep_DO.mg.L, 
          Deep_cond = Deep_Cond, Deep_sal_ppt = Deep_Sal.ppt, Deep_pH, TDS_mg.L, 
-         YSI_atm, Core_length_cm, Sediment_depth, Bottle_temp_in, Bottle_temp_out
+         YSI_atm, Core_length_cm, Sediment_depth, Bottle1_temp_in, Bottle_temp_out
          = `Shakey Bottle 1 temp out`, Bottle2_temp_in, Bottle2_temp_out = 
          `Shakey Bottle 2 temp out`, Tows, Floating_chamber:General_comments) %>% 
   mutate(Date = lubridate::dmy(Date),
@@ -217,7 +217,7 @@ master2020 <- master2020 %>%
 
 # ADDING IN DATA #--------------------------------------------------------------
 
-## 2017 ##
+# 2017 ####
 
 # Chl data #
 # read in chl total data from 2017
@@ -281,7 +281,7 @@ master2017 <- left_join(select(master2017, -Chl_total, -MC_ug.L, -Elevation_m,
          pCO2:Sediment_C_N_org, d15N_bulk_POM:C_N_POM, d2H:Rn_dpm.L,
          Elevation_m, Area_m2:General_comments)
 
-## 2018 ##
+# 2018 ####
 
 # shaky bottles
 sb_2018 <- read_csv("data/shakeybottle_2018.csv") %>% 
@@ -292,7 +292,7 @@ sb_2018 <- read_csv("data/shakeybottle_2018.csv") %>%
   select(Site_ID:Temp_out) %>% 
   pivot_longer(Temp_in:Temp_out, names_to = "temp_type", values_to = "temp") %>% 
   pivot_wider(names_from = c(temp_type, Sample), values_from = temp) %>% 
-  rename(Bottle_temp_in = Temp_in_1A, Bottle_temp_out = Temp_out_1A,
+  rename(Bottle1_temp_in = Temp_in_1A, Bottle1_temp_out = Temp_out_1A,
          Bottle2_temp_in = Temp_in_2A, Bottle2_temp_out = Temp_out_2A)
 
 # Chlorida, Alk, and SO4
@@ -309,7 +309,7 @@ alk_etc_2018 <- read_csv("data/cl_alk_so4_2018.csv") %>%
   # if Day has only 1 character, add a 0 in front so lubridate understands
   mutate(Day = ifelse(str_length(Day) == 1, paste0("0", Day), Day)) %>% 
   unite("Date", Day, Month, Year, sep = "-") %>% 
-  mutate(SO4_mg.L = as.numeric(SO4_mg.L),
+  mutate(SO4_mg.L = as.numeric(SO4_mg.L),   ### should maybe be 10% of detection limit...
          Date = lubridate::dmy(Date),
          Site_ID = replace(Site_ID, Site_ID == '5A', '56A'),
          # if Site_ID is just a number (no letters), add the letter A
@@ -328,21 +328,20 @@ float_2018 <- read_csv("data/floatingchamber_2018.csv") %>%
 
 # merge into 2018
 master2018 <- left_join(select(master2018, 
-                               -Bottle_temp_in:-Bottle2_temp_out, 
+                               -Bottle1_temp_in:-Bottle2_temp_out, 
                                -SO4_mg.L:-Chloride_mg.L),
                         sb_2018) %>% 
   left_join(alk_etc_2018) %>% 
-  select(Site_ID:Sediment_depth, Bottle_temp_in:Bottle2_temp_out, 
+  select(Site_ID:Sediment_depth, Bottle1_temp_in:Bottle2_temp_out, 
          Tows:Surface_TN_TP, SO4_mg.L, Alk_mg.L, Chloride_mg.L,
          MC_ug.L:General_comments) %>% 
   mutate(Floating_chamber = ifelse(Site_ID %in% as.vector(float_2018$Site_ID) & 
                                      Date %in% as.vector(float_2018$Date),
                                    'Y', 'N'))
 
-## 2019 ##
+# 2019 ####
 
-# POM -- almost working, but some sites have mutliple dates?
-# check dates; also use setdiff() to check site_IDs
+# POM -- check site_ID w/ set diff once merged
 pom_2019 <- read_csv("data/POM_2019.csv") %>% 
   select(Site_ID = Sample, d15N_bulk_POM = d15NAIR, d13C_bulk_POM = d13CVPDB,
          ugN_bulk_POM = mgN, ugC_bulk_POM = mgC, PercentN_bulk_POM = `%N`,
@@ -354,17 +353,58 @@ pom_2019 <- read_csv("data/POM_2019.csv") %>%
   unite(Date, Month, Day, Year, sep = "-") %>% 
   filter(str_sub(Site_ID, 1, 1) == "D", is.na(Extra), Site_ID != 'DIL') %>% 
   mutate(Date = lubridate::mdy(Date),
-         Site_ID = str_sub(Site_ID, 2, length(Site_ID))) %>% 
+         Site_ID = str_sub(Site_ID, 2, length(Site_ID)),
+         Site_ID = ifelse(is.na(str_extract(Site_ID, "[aA-zZ]+")),
+                          paste0(Site_ID, 'A'), Site_ID)) %>% 
   select(-Extra) %>% 
   group_by(Site_ID, Date) %>% 
   summarise(across(.cols = d15N_bulk_POM:C_N_POM, .fns = ~ mean(., na.rm = TRUE)))
 
+# shaky bottle temps
+sb_2019 <- read_csv("data/shakeybottle_2019.csv") %>% 
+  mutate(Date = lubridate::dmy(Date),
+         Site_ID = ifelse(is.na(str_extract(Site_ID, "[aA-zZ]+")),
+                          paste0(Site_ID, 'A'), Site_ID)) %>% 
+  filter(Sample == '1A' | Sample == '2A') %>% # checked NAs, they are fine
+  select(Site_ID:Temp_Out) %>% 
+  pivot_longer(Temp_in:Temp_Out, names_to = "temp_type", values_to = "temp") %>% 
+  pivot_wider(names_from = c(temp_type, Sample), values_from = temp) %>% 
+  rename(Bottle1_temp_in = Temp_in_1A, Bottle1_temp_out = Temp_Out_1A,
+         Bottle2_temp_in = Temp_in_2A, Bottle2_temp_out = Temp_Out_2A)
 
-sb_2019 <- read_csv("data/shakeybottle_2019.csv")
+# alk, SO4, and chloride
+alk_etc_2019 <- read_csv("data/ALK_CHL_SO4_2019.csv") %>% 
+  select(Site_ID = `Sample ID`, Alk_mg.L = `ALKALINITY (mg/L)`, 
+         Chloride_mg.L = `CHLORIDE (mg/L)`, SO4_mg.L = `SO4 (mg/L)`) %>% 
+  separate(Site_ID, c("Site_ID", "Date"), "-") %>% 
+  filter(str_sub(Site_ID, 1, 1) == "D") %>% 
+  mutate(Year = 2019,
+         Month = str_extract(Date, "[aA-zZ]+"), # pull out letters from Date
+         Day = str_extract(Date, "[0-9]+")) %>% # pull out numbers from Date
+  # if Day has only 1 character, add a 0 in front so lubridate understands
+  mutate(Day = ifelse(str_length(Day) == 1, paste0("0", Day), Day)) %>% 
+  unite("Date", Day, Month, Year, sep = "-") %>% 
+  mutate(Date = lubridate::dmy(Date),
+         Site_ID = str_sub(Site_ID, 2, length(Site_ID)),
+         Site_ID = ifelse(is.na(str_extract(Site_ID, "[aA-zZ]+")),
+                          paste0(Site_ID, 'A'), Site_ID)) 
 
-alk_etc_2019 <- read_csv("data/ALK_CHL_SO4_2019.csv")
+# merge into 2019 master file
+master2019 <- left_join(select(master2019, 
+                               -Bottle1_temp_in:-Bottle2_temp_out, 
+                               -SO4_mg.L:-Chloride_mg.L,
+                               -d15N_bulk_POM:-C_N_POM),
+                        sb_2019) %>% 
+  left_join(alk_etc_2019) %>% 
+  left_join(pom_2019) %>% 
+  select(Site_ID:Sediment_depth, Bottle1_temp_in:Bottle2_temp_out, 
+         Tows:Surface_TN_TP, SO4_mg.L, Alk_mg.L, Chloride_mg.L,
+         MC_ug.L:Sediment_C_N_org, d15N_bulk_POM:C_N_POM,
+         d2H:General_comments) 
 
-## 2020 ##
+## need to double-check site_IDs that might be missing in 2019
+
+# 2020 ####
 
 # read in DIC, DOC, and water chem data for 2020
 carbon2020 <- read.csv("data/carbon_2020.csv", 
