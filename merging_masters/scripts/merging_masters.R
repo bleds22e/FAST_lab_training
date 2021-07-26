@@ -84,7 +84,7 @@ master2017 <- master2017 %>%
          d15N_bulk_POM:C_N_POM, d2H:Regime, Water_source = Water_Source, 
          Residence_time = RT, Water_class, d_excess:Inflow, Land_use = Landuse, 
          Age_years = Age.years, B_F_max = b.f.max, 
-         B_F_min = b.f.min, Rn_dpm.L, Elevation_m, Area_m2 = Area.m, Perimeter, 
+         B_F_min = b.f.min, Rn_dpm.L, Elevation_m, Area_m2 = Area.m, Perimeter_m = Perimeter, 
          Volume_m3 = Volume.m3, SI, General_comments = `General Comments`) %>% 
   # calculate the columns missing columns that we can
   mutate(Date = lubridate::dmy(Date),
@@ -132,7 +132,8 @@ master2018 <- master2018 %>%
          Residence_Time, Water_class, d_excess, delI18O, delI2H, Inflow, Land_use
          = Landuse, Age_years = Age.years, B_F_max = b.f.max, B_F_min
          = b.f.min, Rn_dpm.L = Rn.dpm.L, Elevation_m = elevation.m, Area_m2 = 
-         Area.m2, Perimeter, Volume_m3, SI, General_comments = `General Comments`) %>% 
+         Area.m2, Perimeter_m = Perimeter, Volume_m3, SI, 
+         General_comments = `General Comments`) %>% 
   mutate(Date = lubridate::dmy(Date),
          Site_ID = ifelse(is.na(str_extract(Site_ID, "[aA-zZ]+")),
                           paste0(Site_ID, 'A'), Site_ID))
@@ -175,7 +176,7 @@ master2019 <- master2019 %>%
          `Water Source`, Residence_time = Residence_Time, Water_class, d_excess:Inflow,
          Land_use = Landuse, Age_years = Age.years, B_F_max
          = b.f.max, B_F_min = b.f.min, Rn_dpm.L = Rn.dpm.L, Elevation_m, Area_m2, 
-         Perimeter, Volume_m3, SI, General_comments = `General Comments`) %>% 
+         Perimeter_m = Perimeter, Volume_m3, SI, General_comments = `General Comments`) %>% 
   mutate(Date = lubridate::dmy(Date),
          Site_ID = ifelse(is.na(str_extract(Site_ID, "[aA-zZ]+")),
                           paste0(Site_ID, 'A'), Site_ID))
@@ -199,7 +200,7 @@ master2020 <- master2020 %>%
              Residence_time = NA, Water_class = NA, d_excess = NA, delI18O = NA, 
              delI2H = NA, Inflow = NA, Land_use = NA, Age_years = NA, 
              B_F_max = NA, B_F_min = NA, Rn_dpm.L = NA, Elevation_m = NA, Area_m2
-             = NA, Perimeter = NA, Volume_m3 = NA, SI = NA, General_comments = NA) %>% 
+             = NA, Perimeter_m = NA, Volume_m3 = NA, SI = NA, General_comments = NA) %>% 
   select(Site_ID:Time, Latitude = latitude, Longitude = longitude, Air_temp, 
          Cloud_perc = `Cloud (%)`, Wind_km.hr, Field_team, Secchi_m = Secchi.m, 
          Depth_m = Depth.m, Max_depth_m = `Sample_depth (m)`, DO_calibration_perc = 
@@ -208,7 +209,7 @@ master2020 <- master2020 %>%
          Surface_Cond, Surface_sal_ppt = Surface_Sal.ppt, Surface_pH, Deep_temp 
          = Deep_Temp, Deep_DO_sat = Deep_DO.sat, Deep_DO_mg.L = Deep_DO.mg.L, 
          Deep_cond = Deep_Cond, Deep_sal_ppt = Deep_Sal.ppt, Deep_pH, TDS_mg.L, 
-         YSI_atm, Core_length_cm, Sediment_depth, Bottle1_temp_in, Bottle_temp_out
+         YSI_atm, Core_length_cm, Sediment_depth, Bottle1_temp_in, Bottle1_temp_out
          = `Shakey Bottle 1 temp out`, Bottle2_temp_in, Bottle2_temp_out = 
          `Shakey Bottle 2 temp out`, Tows, Floating_chamber:General_comments) %>% 
   mutate(Date = lubridate::dmy(Date),
@@ -312,6 +313,7 @@ alk_etc_2018 <- read_csv("data/cl_alk_so4_2018.csv") %>%
   mutate(SO4_mg.L = as.numeric(SO4_mg.L),   ### should maybe be 10% of detection limit...
          Date = lubridate::dmy(Date),
          Site_ID = replace(Site_ID, Site_ID == '5A', '56A'),
+         Site_ID = replace(Site_ID, Site_ID == '66', '66C'),
          # if Site_ID is just a number (no letters), add the letter A
          Site_ID = ifelse(is.na(str_extract(Site_ID, "[aA-zZ]+")),
                           paste0(Site_ID, 'A'), Site_ID)) %>% 
@@ -319,6 +321,23 @@ alk_etc_2018 <- read_csv("data/cl_alk_so4_2018.csv") %>%
   filter(str_sub(Site_ID, 1, 1) != "P", is.na(Hours)) %>% 
   select(-Hours)
 
+# tows 
+tows_2018 <- read_csv("data/tows_2018.csv", na = 'na') %>% 
+  rename(Site_ID = `Site ID`) %>% 
+  separate(Site_ID, c("Site_ID", "Hours"), sep = " ", fill = "right") %>% 
+  filter(is.na(Hours)) %>% 
+  mutate(Date = lubridate::dmy(Date),
+         Site_ID = ifelse(is.na(str_extract(Site_ID, "[aA-zZ]+")),
+                          paste0(Site_ID, 'A'), Site_ID)) %>% 
+  select(-Hours)
+
+# volume and perimeter
+vol_per_2018 <- read_csv("data/vol_per_2018.csv") %>% 
+  rename(Volume_m3 = Volume.m3, Perimeter_m = Perimeter.m) %>% 
+  mutate(Date = lubridate::dmy(Date),
+         Site_ID = ifelse(is.na(str_extract(Site_ID, "[aA-zZ]+")),
+                          paste0(Site_ID, 'A'), Site_ID))
+  
 # float chambers
 float_2018 <- read_csv("data/floatingchamber_2018.csv") %>% 
   select(Site_ID = 'Dugout ID', Date) %>% 
@@ -329,19 +348,22 @@ float_2018 <- read_csv("data/floatingchamber_2018.csv") %>%
 # merge into 2018
 master2018 <- left_join(select(master2018, 
                                -Bottle1_temp_in:-Bottle2_temp_out, 
-                               -SO4_mg.L:-Chloride_mg.L),
+                               -SO4_mg.L:-Chloride_mg.L,
+                               -Tows, -Volume_m3, -Perimeter_m),
                         sb_2018) %>% 
   left_join(alk_etc_2018) %>% 
-  select(Site_ID:Sediment_depth, Bottle1_temp_in:Bottle2_temp_out, 
-         Tows:Surface_TN_TP, SO4_mg.L, Alk_mg.L, Chloride_mg.L,
-         MC_ug.L:General_comments) %>% 
+  left_join(tows_2018) %>% 
+  left_join(vol_per_2018) %>% 
+  select(Site_ID:Sediment_depth, Bottle1_temp_in:Bottle2_temp_out, Tows,
+         Floating_chamber:Surface_TN_TP, SO4_mg.L, Alk_mg.L, Chloride_mg.L,
+         MC_ug.L:Area_m2, Perimeter_m, Volume_m3, SI:General_comments) %>% 
   mutate(Floating_chamber = ifelse(Site_ID %in% as.vector(float_2018$Site_ID) & 
                                      Date %in% as.vector(float_2018$Date),
                                    'Y', 'N'))
 
 # 2019 ####
 
-# POM -- check site_ID w/ set diff once merged
+# POM 
 pom_2019 <- read_csv("data/POM_2019.csv") %>% 
   select(Site_ID = Sample, d15N_bulk_POM = d15NAIR, d13C_bulk_POM = d13CVPDB,
          ugN_bulk_POM = mgN, ugC_bulk_POM = mgC, PercentN_bulk_POM = `%N`,
@@ -358,7 +380,8 @@ pom_2019 <- read_csv("data/POM_2019.csv") %>%
                           paste0(Site_ID, 'A'), Site_ID)) %>% 
   select(-Extra) %>% 
   group_by(Site_ID, Date) %>% 
-  summarise(across(.cols = d15N_bulk_POM:C_N_POM, .fns = ~ mean(., na.rm = TRUE)))
+  summarise(across(.cols = d15N_bulk_POM:C_N_POM, .fns = ~ mean(., na.rm = TRUE))) %>% 
+  mutate(across(.fns = ~replace(., is.nan(.), NA)))
 
 # shaky bottle temps
 sb_2019 <- read_csv("data/shakeybottle_2019.csv") %>% 
@@ -479,12 +502,24 @@ master2020 <- master2020 %>%
          Date = replace(Date, Site_ID == '14A' & Date == "2020-08-16", "2020-08-17"),
          Date = replace(Date, Site_ID == '56A' & Date == "2020-08-16", "2020-08-17"))
 
+# other bits of data
+sites_2020 <- paste(c(unique(master2020$Site_ID), "65", "14C2"), collapse = '|')
+other_2020 <- read_csv("data/other_2020.csv", na = 'na') %>% 
+  rename(Site_ID = `Site ID`, Bottle1_temp_in = `Bottle Temp In 1`,
+         Bottle1_temp_out = `Bottle Temp Out 1`, Bottle2_temp_in = `Bottle Temp In 2`,
+         Bottle2_temp_out = `Bottle Temp Out 2`, Field_team = `Field Team`,
+         General_comments = `General Comments`) %>% 
+  mutate(Date = lubridate::dmy(Date),
+         Site_ID = str_extract(Site_ID, sites_2020))
+
 # need to merge 2020 data #
 master2020 <- full_join(master2020, carbon_water_surface) %>% 
-  full_join(., carbon_water_deep)
+  full_join(., carbon_water_deep) %>% 
+  select(-Bottle1_temp_in:-Bottle2_temp_out, -Field_team, -General_comments) %>% 
+  left_join(other_2020)
+#####
 
-
-# MATCH COLUMN TYPES #----------------------------------------------------------
+# MATCH COLUMN TYPES ####-------------------------------------------------------
 
 # only chr columns should be Site_ID, Field_team, Floating_chamber, Regime, 
 # Water_source, Water_class, Age_class, and Land_use #
@@ -560,8 +595,9 @@ master2019 <- left_join(select(master2019, -Land_use),
 
 master2020 <- left_join(select(master2020, -Land_use),
                         select(master2017, Site_ID, Land_use))
+#####
 
-# BIND TOGETHER #---------------------------------------------------------------
+# BIND TOGETHER ####------------------------------------------------------------
 
 grand_master <- bind_rows(master2017, 
                           master2018,
