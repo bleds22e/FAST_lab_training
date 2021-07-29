@@ -1,45 +1,45 @@
 ﻿Site ID,Date,Bottle Temp In 1,Bottle Temp Out 1,Bottle Temp In 2,Bottle Temp Out 2,Field Team,General Comments
-FH,29-May-20,15.2,16.3,15.2,15.7,na,na
+FH,29-May-20,15.2,16.3,15.2,15.7,"RR, NL",na
 56C,3-Jun-20,16.6,16.6,16.6,17.2,"RR, KF","Very windy day, no exposed sediment - all grass all around dugout"
 56A,3-Jun-20,17.3,18.8,17.3,18.2,"RR, KF","Very little exposed sediment, sampled dry flux from a small dry patch with ~10% plant cover"
-65,4-Jun-20,17.8,18.2,17.8,18.5,na,na
-LH,na,17.7,19,17.7,19,na,na
+LS,4-Jun-20,17.8,18.2,17.8,18.5,"RR,NL",na
+LH,4-Jun-20,17.7,19,17.7,19,"RR,NL",na
 14A,5-Jun-20,16.2,17.6,16.2,17.4,"RR, NB",na
-ACB2,22-Jun-20,17.2,18.5,17.2,18.4,na,Surrounded by vegetation
-ACB1,22-Jun-20,16.4,18,16.4,18,na,"Approximately 50-70 years old, filled/pumped with stream water, ""dry"", last dredged - 15 years ago, hasn’t been gauged (?)"
-ALHM2,23-Jun-20,21.6,19.8,21.6,20.4,na,na
-ALHM1,23-Jun-20,20.3,24,20.3,22.1,na,"Spring fed at the bottom, vegetation all around the dugout"
-MC1,26-Jun-20,22.7,24.4,22.7,24.5,na,na
-B14B,29-Jun-20,19.9,20.5,19.9,20.2,na,Filling
-B14A,29-Jun-20,19.5,19.8,19.5,20,na,na
-BFH,1-Jul-20,19.3,20.8,19.3,20.8,na,Wet mud
-ALA1,2-Jul-20,19.5,20.3,19.5,20.5,na,~10 years old
-BLH,2-Jul-20,24.7,26.3,24.7,26.4,na,na
-BLS,na,23.7,25.6,23.7,25.3,na,na
-ALA2,na,20.5,21.4,20.5,21.4,na,na
-14C2,13-Jul-20,19.4,19.4,19.4,19.3,na,YSI died
-MC3,13-Jul-20,19.4,19.5,19.4,19.1,na,na
-A T1,na,20.2,21.2,20.2,20.9,na,15 years
-A T2,14-Jul-20,20.7,22.5,na,na,na,"Old, 40 years, riparian zone"
-C56A,15-Jul-20,19.2,20.9,19.2,20.9,na,na
-C14A,16-Jul-20,19.6,21.9,19.6,21.2,na,na
-B56C,29-Jul-20,20.1,21.1,20.1,20.6,na,"Deep C 1& 2 = 20.2, Deep D 1&2 = 20.4"
-D56A,na,22,23.1,22,23.3,na,"Deep C 1&2 = 22.6, Deep D 1&2 = 22.5; Deep GHG to first valve/connector"
-D14A,30-Jul-20,22.8,25.2,22.8,24.4,na,"C 1&2 = 20.2, D 1&2 = 18.9; Bot water - green hue - see pic. "
-C14B,30-Jul-20,24.5,24.5,24.5,24.6,na,"C 1&2 = 23.7, D 1&2 = 23.5; lowering water levels for both 14A & B"
-LS,4-Aug-20,21.7,22.7,21.7,22.4,na,"C 1&2 = 22.4, D 1&2 = 18.6; C1&C2 - measured at ~20 m, D1&2 - measured at ~4m"
-DLH1 (CLH),4-Aug-20,22.7,23.8,22.7,23.5,na,"C 1&2 = 21.7, D 1&2 = 21.7; BLS1 = CLS, BLH1 = CLH third time sampling. Ebulltime!"
-CFH,6-Aug-20,22.3,26.1,22.3,25.5,na,"C = 23.2, D = 23.0; lower water level"
-BCB1,6-Aug-20,21.6,23.3,21.6,22.7,na,"C = 22.3, D = 22.7"
-BCB2,6-Aug-20,23.1,24.7,23.1,24.7,na,"C = 20.2, D = 21.5"
-BT1,10-Aug-20,17.7,19.5,17.7,18.9,na,"C = 18.3, D = 18.4; Beaver"
-BT2,10-Aug-20,19.1,20.1,19.1,20.1,na,"C = 19.6, D = 19.7; Trees shading on east side of dugout, trees shelter dugout from wind, large invertebrate (size of fist) - looks like robols from district q"
-BLHM2,11-Aug-20,18.9,20.3,18.9,19.7,na,"C = 18.8, D = 19.0; macrophytes"
-BLHM1,11-Aug-20,22.3,23.8,na,na,na,"C = 20.7, D = 20.8; riparian vegetation all around, no dry flux - just ""pasture"", trees"
-BLA1,12-Aug-20,18.3,20.3,18.3,20.3,na,"C = 18.1, D = 17.9"
-BLA2,12-Aug-20,18.9,20.4,18.9,20.4,na,"C = 18.6, D = 18.5; 3 dry runs, 1 close, new veg, pasture"
-BMC3,13-Aug-20,20.4,22.3,20.4,21.4,na,"C = 19.7, D = 19.6; No B2, benthos mat (?)"
-BMC2,13-Aug-20,19,20.8,19,20.5,na,"C = 20.2, D = 20.4; No B2"
-BMC1,13-Aug-20,18.1,19.3,na,na,na,"C = 18.9, D = 19.2; Donated B1 & B2 vials, C & D still deep GHG"
-E14A,16-Aug-20,22.8,23.6,22.8,23.6,na,"C = 20.3, D = 20.3"
-E56A,16-Aug-20,20.1,23,20.1,23,na,"C = 21.7, D = 22.3; A2 - Air, AIR Contaminated, Deep shakey bottle foaming"
+ACB2,22-Jun-20,17.2,18.5,17.2,18.4,"RR, BM",Surrounded by vegetation
+ACB1,22-Jun-20,16.4,18,16.4,18,"RR, BM","Approximately 50-70 years old, filled/pumped with stream water, ""dry"", last dredged - 15 years ago, hasn’t been gauged (?)"
+ALHM2,23-Jun-20,21.6,19.8,21.6,20.4,"RR, BM",na
+ALHM1,23-Jun-20,20.3,24,20.3,22.1,"RR, BM","Spring fed at the bottom, vegetation all around the dugout"
+MC1,26-Jun-20,22.7,24.4,22.7,24.5,"RR, BM",na
+B14B,29-Jun-20,19.9,20.5,19.9,20.2,"RR, BM",Filling
+B14A,29-Jun-20,19.5,19.8,19.5,20,"RR, BM",na
+BFH,1-Jul-20,19.3,20.8,19.3,20.8,"RR, BM",Wet mud
+ALA1,2-Jul-20,19.5,20.3,19.5,20.5,"RR, BM",~10 years old
+BLH,7-Jul-20,24.7,26.3,24.7,26.4,"RR, BM",na
+BLS,7-Jul-20,23.7,25.6,23.7,25.3,"RR, BM",na
+ALA2,2-Jul-20,20.5,21.4,20.5,21.4,"RR, BM",na
+MC2,13-Jul-20,19.4,19.4,19.4,19.3,"RR, BM",YSI died
+MC3,13-Jul-20,19.4,19.5,19.4,19.1,"RR, BM",na
+A T1,13-Jul-20,20.2,21.2,20.2,20.9,"RR, BM",15 years
+A T2,14-Jul-20,20.7,22.5,20.7,22.4,"RR, BM","Old, 40 years, riparian zone"
+C56A,15-Jul-20,19.2,20.9,19.2,20.9,"RR, BM",na
+C14A,16-Jul-20,19.6,21.9,19.6,21.2,"RR, BM",na
+B56C,29-Jul-20,20.1,21.1,20.1,20.6,"RR, BM","Deep C 1& 2 = 20.2, Deep D 1&2 = 20.4"
+D56A,29-Jul-20,22,23.1,22,23.3,"RR, BM","Deep C 1&2 = 22.6, Deep D 1&2 = 22.5; Deep GHG to first valve/connector"
+D14A,30-Jul-20,22.8,25.2,22.8,24.4,"RR, BM","C 1&2 = 20.2, D 1&2 = 18.9; Bot water - green hue - see pic. "
+C14B,30-Jul-20,24.5,24.5,24.5,24.6,"RR, BM","C 1&2 = 23.7, D 1&2 = 23.5; lowering water levels for both 14A & B"
+LS,4-Aug-20,21.7,22.7,21.7,22.4,"RR, BM","C 1&2 = 22.4, D 1&2 = 18.6; C1&C2 - measured at ~20 m, D1&2 - measured at ~4m"
+CLH,4-Aug-20,22.7,23.8,22.7,23.5,"RR, BM","C 1&2 = 21.7, D 1&2 = 21.7; BLS1 = CLS, BLH1 = CLH third time sampling. Ebulltime!"
+CFH,6-Aug-20,22.3,26.1,22.3,25.5,"RR, BM","C = 23.2, D = 23.0; lower water level"
+BCB1,6-Aug-20,21.6,23.3,21.6,22.7,"RR, BM","C = 22.3, D = 22.7"
+BCB2,6-Aug-20,23.1,24.7,23.1,24.7,"RR, BM","C = 20.2, D = 21.5"
+BT1,10-Aug-20,17.7,19.5,17.7,18.9,"RR, BM","C = 18.3, D = 18.4; Beaver"
+BT2,10-Aug-20,19.1,20.1,19.1,20.1,"RR, BM","C = 19.6, D = 19.7; Trees shading on east side of dugout, trees shelter dugout from wind, large invertebrate (size of fist) - looks like robols from district q"
+BLHM2,11-Aug-20,18.9,20.3,18.9,19.7,"RR, BM","C = 18.8, D = 19.0; macrophytes"
+BLHM1,11-Aug-20,22.3,23.8,22.3,23,"RR, BM","C = 20.7, D = 20.8; riparian vegetation all around, no dry flux - just ""pasture"", trees"
+BLA1,12-Aug-20,18.3,20.3,18.3,20.3,"RR, BM","C = 18.1, D = 17.9"
+BLA2,12-Aug-20,18.9,20.4,18.9,20.4,"RR, BM","C = 18.6, D = 18.5; 3 dry runs, 1 close, new veg, pasture"
+BMC3,13-Aug-20,20.4,22.3,20.4,21.4,"RR, BM","C = 19.7, D = 19.6; No B2, benthos mat (?)"
+BMC2,13-Aug-20,19,20.8,19,20.5,"RR, BM","C = 20.2, D = 20.4; No B2"
+BMC1,13-Aug-20,18.1,19.3,18.1,19.3,"RR, BM","C = 18.9, D = 19.2; Donated B1 & B2 vials, C & D still deep GHG"
+E14A,16-Aug-20,22.8,23.6,22.8,23.6,"RR, BM","C = 20.3, D = 20.3"
+E56A,16-Aug-20,20.1,23,20.1,23,"RR, BM","C = 21.7, D = 22.3; A2 - Air, AIR Contaminated, Deep shakey bottle foaming"

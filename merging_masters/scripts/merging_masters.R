@@ -517,6 +517,7 @@ master2020 <- full_join(master2020, carbon_water_surface) %>%
   full_join(., carbon_water_deep) %>% 
   select(-Bottle1_temp_in:-Bottle2_temp_out, -Field_team, -General_comments) %>% 
   left_join(other_2020)
+
 #####
 
 # MATCH COLUMN TYPES ####-------------------------------------------------------
