@@ -12,7 +12,7 @@ R and RStudio are separate downloads and installations. R is the underlying stat
 #### *If you already have R and RStudio installed:*
 
 1. Open RStudio, click on “Help” > “Check for updates”. (If you don't see "Check for updates" under "Help," you need to update RStudio [here](https://www.rstudio.com/products/rstudio/download/#download), like I did!)
-2. To check which version of R you are using, start RStudio and the first thing that appears in the console indicates the version of R you are running. Alternatively, you can type sessionInfo(), which will also display which version of R you are running. Ideally, you will be running R-4.0.5. If you're running anything below R-4.0, follow the steps below. 
+2. To check which version of R you are using, start RStudio and the first thing that appears in the console indicates the version of R you are running. Alternatively, you can type sessionInfo(), which will also display which version of R you are running. Ideally, you will be running R-4.1.0. If you're running anything below R-4.0, follow the steps below. 
     * Type the following into the console and run: `install.packages("installr")`
     * After you've installed the `installr` package, run `installr::updateR()` in the console. This will start the updating process of your R installation by: “finding the latest R version, downloading it, running the installer, deleting the installation file, copy and updating old packages to the new R installation.”
 
@@ -33,7 +33,7 @@ Once you've done this, be sure to (re)install the packages.
 #### *If you already have R and RStudio installed:*
 
 1. Open RStudio, click on “Help” > “Check for updates”. (If you don't see "Check for updates" under "Help," you need to update RStudio [here](https://www.rstudio.com/products/rstudio/download/#download), like I did!)
-2. To check the version of R you are using, start RStudio and the first thing that appears on the terminal indicates the version of R you are running. Alternatively, you can type sessionInfo(), which will also display which version of R you are running. Ideally, you will be running R-4.0.5. If you're running anything below R-4.0, install an updated version from [here](https://cloud.r-project.org/bin/macosx/). 
+2. To check the version of R you are using, start RStudio and the first thing that appears on the terminal indicates the version of R you are running. Alternatively, you can type sessionInfo(), which will also display which version of R you are running. Ideally, you will be running R-4.1.0. If you're running anything below R-4.0, install an updated version from [here](https://cloud.r-project.org/bin/macosx/). 
 
 Once you've done this, be sure to (re)install the packages. 
 
